@@ -5,5 +5,5 @@
 require 'pieces' 
 require 'spec_helper'
 
-describe Pieces do 
+describe Pawn do 
 end
