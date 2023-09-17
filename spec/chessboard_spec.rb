@@ -47,5 +47,14 @@ describe Chessboard do
         expect(game_place.instance_variable_get(:@board)[4][0]).to eq('♜')
       end
     end
+    
+    context 'when piece is removed from original position' do
+      before do 
+        game_place.place_piece('♜', 'a5')
+      end
+      it "should replace original position with appropriate square" do
+        expect(game_place.instance_variable_get(:@board)[7][0]).to eq('██')
+      end
+    end
   end
 end
