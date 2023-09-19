@@ -11,7 +11,7 @@ describe Chessboard do
     context 'when invoked' do
       it 'prints the board' do
         result = game_board.print_board
-        solution = <<-Board
+        solution = <<-BOARD
                        ⒜   ⒝   ⒞   ⒟   ⒠   ⒡   ⒢   ⒣
                  ⑴  | ♖ | ♘ | ♗ | ♕ | ♔ | ♗ | ♘ | ♖ |  ⑴
                   ⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋
@@ -29,16 +29,16 @@ describe Chessboard do
                   ⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋⚋
                  ⑻  | ♜ | ♞ | ♝ | ♚ | ♛ | ♝ | ♞ | ♜ |  ⑻
                        ⒜   ⒝   ⒞   ⒟   ⒠   ⒡   ⒢   ⒣
-        Board
+        BOARD
         expect(result).to eq(solution)
       end
     end
   end
 
-  describe "#place_piece" do
+  describe '#place_piece' do
     subject(:game_place) { described_class.new }
-    context 'when given piece and position' do 
-      before do 
+    context 'when given piece and position' do
+      before do
         board = game_place.instance_variable_get(:@board)
         allow(game_place).to receive(:coordinate?).with('a5').and_return(board[4][0])
       end
@@ -47,12 +47,12 @@ describe Chessboard do
         expect(game_place.instance_variable_get(:@board)[4][0]).to eq('♜')
       end
     end
-    
+
     context 'when piece is removed from original position' do
-      before do 
+      before do
         game_place.place_piece('♜', 'a5')
       end
-      it "should replace original position with appropriate square" do
+      it 'should replace original position with appropriate square' do
         expect(game_place.instance_variable_get(:@board)[7][0]).to eq('██')
       end
     end
