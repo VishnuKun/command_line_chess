@@ -1,7 +1,9 @@
-# spec/king_spec.rb 
+# frozen_string_literal: true
 
-require 'pieces'
+# spec/king_spec.rb
+
 require 'spec_helper'
+require 'pieces'
 
-describe King do 
+describe King do
 end
