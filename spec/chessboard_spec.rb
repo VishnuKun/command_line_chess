@@ -14,21 +14,21 @@ describe Chessboard do
     
     context "when given position and piece" do
       before do 
-        chess_board.add_piece(pawn, 'a2')
+        chess_board.add_piece(pawn,1, 0)
       end
       it "moves the piece from one box to another" do
-        destination = 'a4'
+        destination = [3, 0]
         chess_board.move_piece(pawn, destination)
-        expect(chess_board.piece_at('a4')).to eq(pawn)
+        expect(chess_board.piece_at(3, 0)).to eq(pawn)
       end
     end
     
     context "when given invalid position" do
       before do 
-        chess_board.add_piece(pawn, 'a2')
+        chess_board.add_piece(pawn, 1, 0)
       end
       it "does nothing" do
-        destination = 'a8'
+        destination = [7, 0]
         expect(chess_board.move_piece(pawn, destination)).to raise_error
       end
     end
@@ -40,12 +40,11 @@ describe Chessboard do
 
     context "when given position" do
       before do 
-        chess_board.add_piece(rook, 'a1')
+        chess_board.add_piece(rook, 0, 0)
       end
       it "removes the piece on that position" do 
-        target_position = 'a1'
-        chess_board.remove_piece(target_position)
-        expect(chess_board.piece_at(target_position)).to be_nil
+        chess_board.remove_piece(0, 0)
+        expect(chess_board.piece_at(0, 0)).to be_nil
       end
     end
   end
