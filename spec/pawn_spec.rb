@@ -10,7 +10,7 @@ describe Pawn do
   describe '#valid_moves' do
     context 'when invoked with given position and piece' do
       before do
-        subject(:piece) { Piece.new(-1) }
+        subject(:piece) { described_class.new(-1) }
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(piece, 1, 0)
       end
@@ -21,7 +21,7 @@ describe Pawn do
 
     context 'when piece has moved already' do
       before do
-        subject(:pawn) { Piece.new(-1) }
+        subject(:pawn) { described_class.new(-1) }
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(pawn, 2, 0)
         pawn.moved = true
@@ -35,7 +35,7 @@ describe Pawn do
   describe '#move_to' do
     context 'when given a move' do
       before do 
-        subject(:piece) { Piece.new(-1) }
+        subject(:piece) { described_class.new(-1) }
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(piece, 0, 0)
       end
@@ -49,15 +49,15 @@ describe Pawn do
   describe '#capture_at' do
     context 'when given position' do
       before do
-        subject(:killer_piece) { Piece.new(-5) }
+        subject(:king) { King.new(-5) }
         subject(:chess_board) { Chessboard.new }
-        subject(:caputured_piece) { Piece.new(1) }
-        chess_board.add_piece(killer_piece, 0, 3)
-        chess_board.add_piece(caputured_piece, 1, 4)
+        subject(:pawn) { described_class.new(1) }
+        chess_board.add_piece(king, 0, 3)
+        chess_board.add_piece(pawn, 1, 4)
       end
       it 'removes the piece at specified position' do
-        captured_piece.capture_at(1, 4)
-        expect(chess_board.piece_at(1, 4)).to be_nil
+        pawn.capture_at(0, 3)
+        expect(chess_board.piece_at(0, 3)).to be_nil
       end
     end
   end
@@ -65,8 +65,8 @@ describe Pawn do
   describe "#en_passant" do
     context "when available" do
       before do 
-        subject(:attacking_pawn) { Piece.new(1)}
-        subject(:target_pawn) { Piece.new(1)}
+        subject(:attacking_pawn) { described_class.new(1)}
+        subject(:target_pawn) { described_class.new(1)}
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(target_pawn, 3, 0)
         chess_board.add_piece(attacking_pawn, 3, 1)
@@ -81,8 +81,8 @@ describe Pawn do
     
     context "when unavailable" do
       before do 
-        subject(:attacking_pawn) { Piece.new(1)}
-        subject(:target_pawn) { Piece.new(1)}
+        subject(:attacking_pawn) { described_class.new(1)}
+        subject(:target_pawn) { described_class.new(1)}
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(target_pawn, 3, 0)
         chess_board.add_piece(attacking_pawn, 3, 1)
@@ -100,7 +100,7 @@ describe Pawn do
   describe "#promote_to" do
     context "when pawn reaches the top" do
       before do 
-        subject(:target_pawn) { Piece.new(1)}
+        subject(:target_pawn) { described_class.new(1)}
         subject(:chess_board) { Chessboard.new }
         chess_board.add_piece(target_pawn, 0, 0)
       end
