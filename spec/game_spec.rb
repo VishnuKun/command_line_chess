@@ -3,9 +3,7 @@
 # spec/queen_spec.rb
 
 require 'spec_helper'
-require 'pieces'
-require 'player'
-require 'chessboard'
+require 'game'
 
 describe Game do
   describe '#game_over?' do
