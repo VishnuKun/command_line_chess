@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# spec/queen_spec.rb
+# spec/bishop_spec.rb
 
 require 'spec_helper'
 require 'pieces'
