@@ -10,7 +10,7 @@ describe Knight do
   describe '#valid_moves' do
     context 'when knight is at (3, 4) on empty chessboard' do
       subject(:knight) { described_class.new(2) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(knight, 3, 4)
       end
@@ -23,8 +23,8 @@ describe Knight do
 
     context 'when knight is at (3, 4) on empty chessboard with an enemy pawn at (5, 5)' do
       subject(:knight) { described_class.new(2) }
-      subject(:pawn) { Pawn.new(1) }
-      subject(:chess_board) { Chessboard.new }
+      let(:pawn) { Pawn.new(1) }
+      let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(knight, 3, 4)
         chess_board.add_piece(pawn, 5, 5)

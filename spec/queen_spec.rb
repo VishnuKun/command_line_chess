@@ -10,7 +10,7 @@ describe Queen do
   describe '#valid_moves' do
     context 'when the Queen is placed at position (0, 0) on an empty chessboard' do
       subject(:queen) { described_class.new(5) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
 
       before do
         chess_board.add_piece(queen, 0, 0)
@@ -27,8 +27,8 @@ describe Queen do
 
     context 'when an eneymy piece is on the on the way of the queen' do
       subject(:queen) { described_class.new(5) }
-      subject(:pawn) { Piece.new(-1) }
-      subject(:chess_board) { Chessboard.new }
+      let(:pawn) { Piece.new(-1) }
+      let(:chess_board) { Chessboard.new }
 
       before do
         chessboard.add_piece(pawn, 3, 3)

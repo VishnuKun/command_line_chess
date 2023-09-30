@@ -10,7 +10,7 @@ describe King do
   describe '#valid_moves' do
     context 'when king is at (0, 3) on empty chess board' do
       subject(:black_king) { described_class.new(-5) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
 
       before do
         chess_board.add_piece(black_king, 0, 3)
@@ -22,7 +22,7 @@ describe King do
 
     context 'when king has moved' do
       subject(:black_king) { described_class.new(-5) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(black_king, 3, 4)
       end
@@ -36,7 +36,7 @@ describe King do
   describe '#move_to' do
     context 'when king is at (0, 4) on empty chess board' do
       subject(:king) { described_class.new(6) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
 
       before do
         chess_board.add_piece(king, 0, 4)
@@ -51,8 +51,8 @@ describe King do
   describe 'capture_at' do
     context 'when king is at position (1, 4) on the chess board with pawn at (2, 5)' do
       subject(:king) { described_class.new(-5) }
-      subject(:chess_board) { Chessboard.new }
-      subject(:pawn) { Pawn.new(1) }
+      let(:chess_board) { Chessboard.new }
+      let(:pawn) { Pawn.new(1) }
 
       before do
         chess_board.add_piece(king, 1, 4)
@@ -67,10 +67,10 @@ describe King do
 
   describe '#castle' do
     context 'when castling is possible' do
-      subject(:chess_board) { Chessboard.new }
       subject(:white_king) { described_class.new(6) }
-      subject(:left_rook) { Rook.new(4) }
-      subject(:right_rook) { Rook.new(4) }
+      let(:chess_board) { Chessboard.new }
+      let(:left_rook) { Rook.new(4) }
+      let(:right_rook) { Rook.new(4) }
 
       before do
         chess_board.add_piece(white_king, 7, 4)
@@ -89,11 +89,11 @@ describe King do
     end
 
     context 'when a piece is inbetween' do
-      subject(:chess_board) { Chessboard.new }
       subject(:white_king) { described_class.new(6) }
-      subject(:left_rook) { Rook.new(4) }
-      subject(:right_rook) { Rook.new(4) }
-      subject(:knight) { Knight.new(2) }
+      let(:chess_board) { Chessboard.new }
+      let(:left_rook) { Rook.new(4) }
+      let(:right_rook) { Rook.new(4) }
+      let(:knight) { Knight.new(2) }
 
       before do
         chess_board.add_piece(white_king, 7, 4)

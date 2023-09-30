@@ -10,7 +10,7 @@ describe Rook do
     describe "#valid_moves" do 
         context "when rook is located the bottom left corner of the board (7, 0)" do
             subject(:rook) { described_class.new(4) }
-            subject(:chess_board) { Chessboard.new }
+            let(:chess_board) { Chessboard.new }
             before do 
                 chess_board.add_piece(rook, 7, 0)
             end
@@ -24,8 +24,8 @@ describe Rook do
         
         context "when rook is at (3, 3) position with an enemy piece at (3, 7)" do 
             subject(:rook) { described_class.new(4) }
-            subject(:pawn) { Pawn.new(-1) }
-            subject(:chess_board) { Chessboard.new }
+            let(:pawn) { Pawn.new(-1) }
+            let(:chess_board) { Chessboard.new }
             before do 
                 chess_board.add_piece(rook, 3, 3)
                 chess_board.add_piece(pawn, 3, 7)

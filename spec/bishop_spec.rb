@@ -10,7 +10,7 @@ describe Bishop do
   describe '#valid_moves' do
     context 'when the Bishop is at corner (0, 7) on an empty board' do
       subject(:bishop) { described_class.new(3) }
-      subject(:chess_board) { Chessboard.new }
+      let(:chess_board) { Chessboard.new }
 
       before do
         chess_board.add_piece(bishop, 0, 7)
@@ -24,8 +24,8 @@ describe Bishop do
 
     context 'when the bishop is at (4, 4) with enemy piece at (6, 2)' do
       subject(:bishop) { described_class.new(3) }
-      subject(:enemy_pawn) { described_class.new(-1) }
-      subject(:chess_board) { Chessboard.new }
+      let(:enemy_pawn) { described_class.new(-1) }
+      let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(bishop, 4, 4)
         chess_board.add_piece(enemy_pawn, 6, 2)
