@@ -21,6 +21,7 @@ class Piece
     @color = set_color(piece_id)
   end
 
+  # create a new piece with the given piece identifier
   def self.create_piece(piece_id)
     case piece_id
     when 1, -1
@@ -40,6 +41,7 @@ class Piece
     end
   end
 
+  # sets the symbol to the piece according to the piece id
   def set_symbol(piece_id)
     case piece_id
     when 1
@@ -69,6 +71,7 @@ class Piece
     end
   end
 
+  # sets the color to the piece according to the piece id
   def set_color(piece_id)
     piece_id.negative? ? 'black' : 'white'
   end
