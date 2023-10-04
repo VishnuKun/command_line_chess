@@ -10,13 +10,13 @@ describe Chessboard do
 
   describe "#move_piece" do 
     subject(:chess_board) { described_class.new }
-    subject(:pawn) { Piece.new(-1) }
+    let(:pawn) { Piece.create_piece(-1) }
     
-    context "when given position and piece" do
+    context "when pawn is at (1, 0) on an empty board" do
       before do 
         chess_board.add_piece(pawn,1, 0)
       end
-      it "moves the piece from one box to another" do
+      it "moves pawn from (1, 0) to (3, 0)" do
         destination = [3, 0]
         chess_board.move_piece(pawn, destination)
         expect(chess_board.piece_at(3, 0)).to eq(pawn)
@@ -27,7 +27,7 @@ describe Chessboard do
       before do 
         chess_board.add_piece(pawn, 1, 0)
       end
-      it "does nothing" do
+      it "raises an error" do
         destination = [7, 0]
         expect(chess_board.move_piece(pawn, destination)).to raise_error
       end
@@ -36,13 +36,13 @@ describe Chessboard do
 
   describe "#remove_piece" do
     subject(:chess_board) { described_class.new }
-    subject(:rook) { Piece.new(-6)}
+    let(:rook) { Piece.create_piece(-6)}
 
-    context "when given position" do
+    context "when rook is at (0, 0)" do
       before do 
         chess_board.add_piece(rook, 0, 0)
       end
-      it "removes the piece on that position" do 
+      it "removes rook from (0, 0)" do 
         chess_board.remove_piece(0, 0)
         expect(chess_board.piece_at(0, 0)).to be_nil
       end
