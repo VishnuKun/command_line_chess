@@ -3,7 +3,6 @@
 # spec/chessboard_spec.rb
 
 require_relative '../lib/pieces'
-require_relative '../lib/pawn'
 require_relative '../lib/chessboard'
 require_relative 'spec_helper'
 
