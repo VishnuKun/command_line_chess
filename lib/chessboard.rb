@@ -51,6 +51,7 @@ class Chessboard
       row.each do |column|
         if column.piece == piece
           return column
+        end
       end
     end
   end
