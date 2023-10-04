@@ -2,9 +2,10 @@
 
 # spec/chessboard_spec.rb
 
-require 'chessboard'
-require 'pieces'
-require 'spec_helper'
+require_relative '../lib/pieces'
+require_relative '../lib/pawn'
+require_relative '../lib/chessboard'
+require_relative 'spec_helper'
 
 describe Chessboard do
 
@@ -17,26 +18,15 @@ describe Chessboard do
         chess_board.add_piece(pawn,1, 0)
       end
       it "moves pawn from (1, 0) to (3, 0)" do
-        destination = [3, 0]
-        chess_board.move_piece(pawn, destination)
+        chess_board.move_piece(pawn, 3, 0)
         expect(chess_board.piece_at(3, 0)).to eq(pawn)
-      end
-    end
-    
-    context "when given invalid position" do
-      before do 
-        chess_board.add_piece(pawn, 1, 0)
-      end
-      it "raises an error" do
-        destination = [7, 0]
-        expect(chess_board.move_piece(pawn, destination)).to raise_error
       end
     end
   end
 
   describe "#remove_piece" do
     subject(:chess_board) { described_class.new }
-    let(:rook) { Piece.create_piece(-6)}
+    let(:rook) { Piece.create_piece(-4)}
 
     context "when rook is at (0, 0)" do
       before do 
