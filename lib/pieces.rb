@@ -2,17 +2,9 @@
 
 # lib/pieces.rb
 
-require_relative 'pawn'
-require_relative 'knight'
-require_relative 'bishop'
-require_relative 'rook'
-require_relative 'queen'
-require_relative 'king'
-require_relative 'chessboard'
-
 class Piece
   attr_accessor :piece_id, :captured, :moved, :symbol , :color
-
+  
   def initialize(piece_id)
     @piece_id = piece_id
     @captured = false
@@ -70,9 +62,17 @@ class Piece
       '♛'
     end
   end
-
+  
   # sets the color to the piece according to the piece id
   def set_color(piece_id)
     piece_id.negative? ? 'black' : 'white'
   end
 end
+
+require_relative 'pawn'
+require_relative 'knight'
+require_relative 'bishop'
+require_relative 'rook'
+require_relative 'queen'
+require_relative 'king'
+require_relative 'chessboard'
