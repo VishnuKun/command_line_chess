@@ -2,14 +2,16 @@
 
 # spec/pieces_spec.rb
 
-require 'spec_helper'
-require 'pieces'
-require 'chessboard'
+
+require_relative '../lib/pawn'
+require_relative '../lib/pieces'
+require_relative '../lib/chessboard'
+require_relative 'spec_helper'
 
 describe Pawn do
   describe '#valid_moves' do
     context 'when pawn is at (1, 0) on an empty chessboard' do
-      subject(:piece) { described_class.new(-1) }
+      subject(:piece) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(piece, 1, 0)
@@ -20,7 +22,7 @@ describe Pawn do
     end
 
     context 'when pawn has already moved' do
-      subject(:pawn) { described_class.new(-1) }
+      subject(:pawn) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(pawn, 2, 0)
@@ -34,7 +36,7 @@ describe Pawn do
 
   describe '#move_to' do
     context 'when pawn is at (0, 0) and given specific position to reach' do
-      subject(:piece) { described_class.new(-1) }
+      subject(:piece) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(piece, 0, 0)
@@ -48,8 +50,8 @@ describe Pawn do
 
   describe '#capture_at' do
     context 'when enemy king is at (0, 3)' do
-      subject(:pawn) { described_class.new(1) }
-      let(:king) { King.new(-5) }
+      subject(:pawn) { described_class.create_piece(1) }
+      let(:king) { Piece.create_piece(-5) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(king, 0, 3)
@@ -64,8 +66,8 @@ describe Pawn do
 
   describe '#en_passant' do
     context 'when black pawn does a double step' do
-      subject(:white_pawn) { described_class.new(1) }
-      let(:black_pawn) { described_class.new(-1) }
+      subject(:white_pawn) { described_class.create_piece(1) }
+      let(:black_pawn) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(black_pawn, 3, 0)
@@ -80,8 +82,8 @@ describe Pawn do
     end
 
     context 'when unavailable' do
-      subject(:black_pawn) { described_class.new(-1) }
-      let(:white_pawn) { described_class.new(1) }
+      subject(:black_pawn) { described_class.create_piece(-1) }
+      let(:white_pawn) { described_class.create_piece(1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(white_pawn, 3, 0)
@@ -98,7 +100,7 @@ describe Pawn do
 
   describe '#promote_to' do
     context 'when pawn reaches the top' do
-      subject(:pawn) { described_class.new(1) }
+      subject(:pawn) { described_class.create_piece(1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(pawn, 0, 0)
