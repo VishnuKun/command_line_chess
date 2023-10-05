@@ -12,7 +12,7 @@ class Spot
     @type = nil
   end
 
-  def emtpy?
+  def empty?
     self.piece.nil?
   end
 end
