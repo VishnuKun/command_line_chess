@@ -10,6 +10,12 @@ class Chessboard
   def initialize
     @board_array = Array.new(8) { Array.new(8) { Spot.new } }
     add_squares(@board_array)
+    @board_array.each_with_index do |row, row_index|
+      row.each_with_index do |spot, column_index|
+        spot.row = row_index
+        spot.column = column_index
+      end
+    end
   end
 
   # moves the given piece to the given position on the board
@@ -41,17 +47,6 @@ class Chessboard
       row.each_with_index do |spot, column_index|
         color = (row_index + column_index).even? ? "░░" : "██"
         spot.type = color
-      end
-    end
-  end
-
-  # finds the spot in which given piece is inside
-  def find_spot(piece)
-    @board_array.each do |row| 
-      row.each do |column|
-        if column.piece == piece
-          return column
-        end
       end
     end
   end
