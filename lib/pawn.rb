@@ -6,8 +6,10 @@ require_relative 'chessboard'
 require_relative 'pieces'
 
 class Pawn < Piece
+  attr_accessor :can_be_promoted
   def initialize(piece_id)
     super(piece_id)
+    @can_be_promoted = false
   end
 
   # performs en-passant action
