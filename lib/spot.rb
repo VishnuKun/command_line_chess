@@ -12,6 +12,7 @@ class Spot
     @type = nil
   end
 
+  # checks whether the spot holds a piece or not
   def empty?
     self.piece.nil?
   end
