@@ -63,4 +63,5 @@ class Pawn < Piece
         moves << right_diagonal
       end
     end
+  end
 end
