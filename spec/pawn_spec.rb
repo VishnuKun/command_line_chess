@@ -2,7 +2,6 @@
 
 # spec/pieces_spec.rb
 
-
 require_relative '../lib/pawn'
 require_relative '../lib/pieces'
 require_relative '../lib/chessboard'
@@ -10,26 +9,82 @@ require_relative 'spec_helper'
 
 describe Pawn do
   describe '#valid_moves' do
-    context 'when pawn is at (1, 0) on an empty chessboard' do
-      subject(:piece) { described_class.create_piece(-1) }
+    # for black pawn
+    context 'when black pawn is at position (7, 0) on empty board' do
+      subject(:black_pawn) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
-        chess_board.add_piece(piece, 1, 0)
+        chess_board.add_piece(black_pawn, 7, 0)
       end
       it 'returns 2 possible moves' do
-        expect(piece.valid_moves).to contain_exactly([2, 0], [3, 0])
+        board = chess_board.board_array
+        expect(black_pawn.valid_moves(board)).to contain_exactly([6, 0], [5, 0])
       end
     end
 
-    context 'when pawn has already moved' do
-      subject(:pawn) { described_class.create_piece(-1) }
+    context 'when black pawn has already moved one step' do
+      subject(:black_pawn) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
-        chess_board.add_piece(pawn, 2, 0)
-        pawn.moved = true
+        chess_board.add_piece(black_pawn, 6, 0)
+        black_pawn.moved = true
       end
       it 'returns only one move' do
-        expect(pawn.valid_moves).to contain_exactly([2, 0])
+        board = chess_board.board_array
+        expect(black_pawn.valid_moves(board)).to contain_exactly([5, 0])
+      end
+    end
+
+    context 'when black black_pawn has reached the top i.e. row 0' do
+      subject(:black_pawn) { described_class.create_piece(-1) }
+      let(:chess_board) { Chessboard.new }
+      before do
+        chess_board.add_piece(black_pawn, 0, 0)
+        black_pawn.moved = true
+      end
+      it 'returns empty array and can be promoted' do
+        board = chess_board.board_array
+        expect(black_pawn.valid_moves(board)).to contain_exactly
+        expect(black_pawn.can_be_promoted).to be true
+      end
+    end
+    # for white pawn
+    context 'when white pawn is at the position (0, 0) on empty board' do
+      subject(:white_pawn) { described_class.create_piece(1) }
+      let(:chess_board) { Chessboard.new }
+      before do
+        chess_board.add_piece(white_pawn, 0, 0)
+      end
+      it 'returns 2 possible moves' do
+        board = chess_board.board_array
+        expect(white_pawn.valid_moves(board)).to contain_exactly([1, 0], [2, 0])
+      end
+    end
+
+    context 'when white pawn has already moved one step' do
+      subject(:white_pawn) { described_class.create_piece(1) }
+      let(:chess_board) { Chessboard.new }
+      before do
+        chess_board.add_piece(white_pawn, 1, 0)
+        white_pawn.moved = true
+      end
+      it 'returns only one move' do
+        board = chess_board.board_array
+        expect(white_pawn.valid_moves(board)).to contain_exactly([2, 0])
+      end
+    end
+
+    context 'when white pawn has reached the top i.e. row 7' do
+      subject(:white_pawn) { described_class.create_piece(1) }
+      let(:chess_board) { Chessboard.new }
+      before do
+        chess_board.add_piece(white_pawn, 7, 0)
+        white_pawn.moved = true
+      end
+      it 'returns empty array and can be promoted' do
+        board = chess_board.board_array
+        expect(white_pawn.valid_moves(board)).to contain_exactly
+        expect(white_pawn.can_be_promoted).to eql(true)
       end
     end
   end
