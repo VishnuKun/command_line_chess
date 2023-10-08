@@ -3,7 +3,7 @@
 # lib/chessboard.rb
 
 require_relative 'spot'
-
+# Chessboard
 class Chessboard
   attr_accessor :board_array
 
@@ -25,7 +25,7 @@ class Chessboard
     target_spot = @board_array[x][y]
     target_spot.piece = piece
   end
-  
+
   # removes the piece from the board array at the given position
   def remove_piece(x, y)
     @board_array[x][y].piece = nil
@@ -33,19 +33,19 @@ class Chessboard
 
   # adds a piece to the desired position on the board
   def add_piece(piece, x, y)
-    return @board_array[x][y].piece = piece
+    @board_array[x][y].piece = piece
   end
 
   # returns the piece at the given position
   def piece_at(x, y)
-    return @board_array[x][y].piece
+    @board_array[x][y].piece
   end
-   
+
   # add Spot instances to the board array
   def add_squares(board_array)
     board_array.each_with_index do |row, row_index|
       row.each_with_index do |spot, column_index|
-        color = (row_index + column_index).even? ? "░░" : "██"
+        color = (row_index + column_index).even? ? '░░' : '██'
         spot.type = color
       end
     end
