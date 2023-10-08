@@ -90,15 +90,17 @@ describe Pawn do
   end
 
   describe '#move_to' do
-    context 'when pawn is at (0, 0) and given specific position to reach' do
+    context 'when black pawn is at (0, 0) and given specific position to reach' do
       subject(:piece) { described_class.create_piece(-1) }
       let(:chess_board) { Chessboard.new }
       before do
         chess_board.add_piece(piece, 0, 0)
       end
       it 'moves the piece to the given position' do
-        piece.move_to(3, 3)
-        expect(piece.position).to eq([3, 3])
+        board = chess_board.board_array
+        piece.move_to(3, 3, board)
+        expect(chess_board.piece_at(3, 3)).to eq(piece)
+        expect(chess_board.piece_at(0, 0)).to be nil
       end
     end
   end
@@ -113,7 +115,8 @@ describe Pawn do
         chess_board.add_piece(pawn, 1, 4)
       end
       it 'removes king and positions itself' do
-        pawn.capture_at(0, 3)
+        board = chess_board.board_array
+        pawn.capture_at(0, 3, board)
         expect(chess_board.piece_at(0, 3)).to eq(pawn)
       end
     end
