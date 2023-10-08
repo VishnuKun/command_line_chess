@@ -106,10 +106,22 @@ class Piece
   end
 
   # captures the enemy piece at the given position
-  def capture_at(x, y)
+  def capture_at(row, column, board)
+    current_piece = self
+    current_spot = find_spot(current_piece, board)
+    target_spot = board[row][column]
+    enemy_piece = target_spot.piece
+    # performs only when there's enemy piece on target spot
+    return unless current_piece.color != enemy_piece.color
+
     # remove the enemy piece from the spot
-    # mark it(piece) as captured
+    target_spot.piece = nil
+    # remove the your piece from the original spot
+    current_spot.piece = nil
+    # mark it(captured piece) as captured
+    enemy_piece.captured = true
     # place your piece on the spot
+    target_spot.piece = current_piece
   end
 
   # checks if the spot is valid as per board boundaries
