@@ -30,10 +30,10 @@ class Pawn < Piece
     b = board
     pawn = spot.piece
     pawn_color = pawn.color
-    direction = pawn.color == 'white' ? -1 : 1 # -1 for upwards and 1 for downwards
+    direction = pawn.color == 'white' ? -1 : 1 
     
     # check if the pawn has already moved
-    if (x + direction).between?(0, 7)
+    if (x + (2 * direction)).between?(0, 7)
       if not pawn.moved
         forward_double = b[x + (2 * direction)][y]
         if forward_double.empty? and b[x+ direction][y].empty?
@@ -65,5 +65,18 @@ class Pawn < Piece
         moves << right_diagonal
       end
     end
+
+    # Check if the pawn has reached the farthest point and ready for promotion
+    if x == 7 && direction == 1 
+      puts "White Pawn Promotion available!" 
+      pawn.can_be_promoted = true
+    end
+    
+    if x == 0 && direction == -1
+      puts "Black Pawn Promotion available!" 
+      pawn.can_be_promoted = true
+    end
+
+    return moves
   end
 end
