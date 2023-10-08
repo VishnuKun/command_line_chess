@@ -4,24 +4,25 @@
 
 require_relative 'chessboard'
 require_relative 'pieces'
-
+# Pawn class
 class Pawn < Piece
   attr_accessor :can_be_promoted
+
   def initialize(piece_id)
     super(piece_id)
     @can_be_promoted = false
   end
 
   # performs en-passant action
-  def en_passant(x, y)
-    return nil
+  def en_passant(_x, _y)
+    nil
   end
 
   # promotes the pawn to desired position
-  def promote_to(instance)
-    return nil
+  def promote_to(_instance)
+    nil
   end
-  
+
   # returns the valid spots for the current pawn instance where it can be moved to
   def valid_pawn_moves(spot, board)
     moves = []
@@ -29,54 +30,37 @@ class Pawn < Piece
     y = spot.column
     b = board
     pawn = spot.piece
-    pawn_color = pawn.color
-    direction = pawn.color == 'white' ? -1 : 1 
-    
+    direction = pawn.color == 'white' ? -1 : 1
+
     # check if the pawn has already moved
-    if (x + (2 * direction)).between?(0, 7)
-      if not pawn.moved
-        forward_double = b[x + (2 * direction)][y]
-        if forward_double.empty? and b[x+ direction][y].empty?
-          moves << forward_double
-        end
-      end
+    if (x + (2 * direction)).between?(0, 7) && !pawn.moved
+      forward_double = b[x + (2 * direction)][y]
+      moves << [forward_double.row, forward_double.column] if forward_double.empty? && b[x + direction][y].empty?
     end
-    
+
     # check for the forward single move
     if (x + direction).between?(0, 7)
       forward_single = b[x + direction][y]
-      if forward_single.empty?
-        moves << forward_single
-      end
+      moves << [forward_single.row, forward_single.column] if forward_single.empty?
     end
 
     # check for the left diagonal move
-    if y > 0 && (x + direction).between?(0,7)
+    if y.positive? && (x + direction).between?(0, 7)
       left_diagonal = b[x + direction][y - 1]
-      if left_diagonal.piece && enemy_piece?(pawn, left_diagonal.piece)
-        moves << left_diagonal
-      end
+      moves << [left_diagonal.row, left_diagonal.column] if left_diagonal.piece && enemy_piece?(pawn,
+                                                                                                left_diagonal.piece)
     end
-    
+
     # check for the right diagonal move
-    if (y < b[x].length - 1) && (x + direction).between?(0,7)
+    if (y < b[x].length - 1) && (x + direction).between?(0, 7)
       right_diagonal = b[x + direction][y + 1]
-      if right_diagonal.piece && enemy_piece?(pawn, right_diagonal.piece)
-        moves << right_diagonal
-      end
+      moves << [right_diagonal.row, right_diagonal.column] if right_diagonal.piece && enemy_piece?(pawn,
+                                                                                                   right_diagonal.piece)
     end
 
     # Check if the pawn has reached the farthest point and ready for promotion
-    if x == 7 && direction == 1 
-      puts "White Pawn Promotion available!" 
-      pawn.can_be_promoted = true
-    end
-    
-    if x == 0 && direction == -1
-      puts "Black Pawn Promotion available!" 
-      pawn.can_be_promoted = true
-    end
-
-    return moves
+    pawn.can_be_promoted = true if x == 7 # white pawn promotion
+    pawn.can_be_promoted = true if x.zero? # black pawn promotion
+    moves
   end
 end
