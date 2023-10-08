@@ -103,6 +103,9 @@ class Piece
 
     # make the destination_spot.piece = piece
     destination.piece = current_piece
+    return unless current_piece.instance_of?(Pawn) && destination.row - current_spot.row == 2
+
+    current_piece.moved_two_spots = true
   end
 
   # captures the enemy piece at the given position
