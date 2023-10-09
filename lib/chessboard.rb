@@ -20,10 +20,19 @@ class Chessboard
 
   # moves the given piece to the given position on the board
   def move_piece(piece, x, y)
-    spot = find_spot(piece)
+    spot = find_spot(piece, @board_array)
     spot.piece = nil
     target_spot = @board_array[x][y]
     target_spot.piece = piece
+  end
+
+  # finds the spot in which given piece is inside
+  def find_spot(piece, spot_array)
+    spot_array.each do |row|
+      row.each do |spot|
+        return spot if spot.piece == piece
+      end
+    end
   end
 
   # removes the piece from the board array at the given position
