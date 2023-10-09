@@ -6,16 +6,32 @@ require_relative 'chessboard'
 require_relative 'pieces'
 # Pawn class
 class Pawn < Piece
-  attr_accessor :can_be_promoted
+  attr_accessor :can_be_promoted, :moved_two_spots
 
   def initialize(piece_id)
     super(piece_id)
     @can_be_promoted = false
+    @moved_two_spots = false
   end
 
   # performs en-passant action
-  def en_passant(_x, _y)
-    nil
+  def en_passant(row, column, board)
+    killer_pawn = self
+    direction = killer_pawn.color == 'white' ? -1 : 1
+    current_spot = find_spot(killer_pawn, board)
+    en_passant_spot = board[current_spot.row + direction][current_spot.column]
+    killed_pawn = en_passant_spot.piece
+    return unless killed_pawn && killed_pawn.moved_two_spots
+    return unless killed_pawn.is_a?(Pawn) && killed_pawn.color != killer_pawn.color
+
+    # capture target pawn
+    killed_pawn.captured = true
+    en_passant_spot.piece = nil
+    # remove your piece from its original spot
+    current_spot.piece = nil
+    # place your piece on the diagonal spot
+    diagonal_spot = board[row][column]
+    diagonal_spot.piece = killer_pawn
   end
 
   # promotes the pawn to desired position
