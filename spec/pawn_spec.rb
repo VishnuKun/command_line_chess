@@ -160,16 +160,17 @@ describe Pawn do
   end
 
   describe '#promote_to' do
-    context 'when pawn reaches the top' do
+    context 'when white pawn reaches the farthest point i.e. row 7' do
       subject(:pawn) { described_class.create_piece(1) }
       let(:chess_board) { Chessboard.new }
       before do
-        chess_board.add_piece(pawn, 0, 0)
-        allow(chess_board).to receive(:promotion_possible?).and_return(true)
+        chess_board.add_piece(pawn, 7, 0)
       end
       it 'should promote pawn to desired piece' do
-        pawn.promote_to(Queen)
-        expect(chess_board.piece_at(0, 0)).to be_an_instance_of(Queen)
+        board = chess_board.board_array
+        pawn.promote_to(-6, board)
+        expect(chess_board.piece_at(7, 0)).to be_an_instance_of(Queen)
+        expect(chess_board.piece_at(7, 0).color).to eq('white')
       end
     end
   end
