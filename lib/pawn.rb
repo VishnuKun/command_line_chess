@@ -35,8 +35,12 @@ class Pawn < Piece
   end
 
   # promotes the pawn to desired position
-  def promote_to(_instance)
-    nil
+  def promote_to(instance_id, board)
+    current_piece = self
+    current_spot = find_spot(current_piece, board)
+    current_spot.piece = nil
+    promoted_piece = Piece.create_piece(instance_id)
+    current_spot.piece = promoted_piece
   end
 
   # returns the valid spots for the current pawn instance where it can be moved to
