@@ -103,7 +103,7 @@ class Piece
     return unless destination.empty? || current_piece.color != destination
 
     # capture enemy piece if present
-    capture_at(row, column, board) if destination.piece && current_piece.color != destination.piece.color
+    destination.piece.captured = true if destination.piece && current_piece.color != destination.piece.color
 
     # make the destination_spot.piece = piece
     destination.piece = current_piece
