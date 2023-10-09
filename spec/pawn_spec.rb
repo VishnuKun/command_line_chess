@@ -124,34 +124,37 @@ describe Pawn do
 
   describe '#en_passant' do
     context 'when black pawn does a double step' do
-      subject(:white_pawn) { described_class.create_piece(1) }
-      let(:black_pawn) { described_class.create_piece(-1) }
-      let(:chess_board) { Chessboard.new }
-      before do
-        chess_board.add_piece(black_pawn, 3, 0)
-        chess_board.add_piece(white_pawn, 3, 1)
-        allow(chess_board).to receive(:en_passant_possible?).and_return(true)
-      end
-      it 'removes the black pawn and moves the white pawn' do
-        white_pawn.en_passant(2, 0)
-        expect(chess_board.piece_at(2, 0)).to eq white_pawn
-        expect(chess_board.piece_at(3, 0)).to be_nil
-      end
-    end
-
-    context 'when unavailable' do
       subject(:black_pawn) { described_class.create_piece(-1) }
       let(:white_pawn) { described_class.create_piece(1) }
       let(:chess_board) { Chessboard.new }
       before do
-        chess_board.add_piece(white_pawn, 3, 0)
-        chess_board.add_piece(black_pawn, 3, 1)
-        allow(chess_board).to receive(:en_passant_possible?).and_return(false)
+        chess_board.add_piece(white_pawn, 1, 1)
+        chess_board.add_piece(black_pawn, 4, 1)
       end
-      it "doesn't remove and move any piece on the board" do
-        black_pawn.en_passant(2, 0)
-        expect(chess_board.piece_at(2, 0)).not_to eq black_pawn
-        expect(chess_board.piece_at(3, 0)).to eq(white_pawn)
+      it 'captures the black pawn and places the white on the spot' do
+        board = chess_board.board_array
+        white_pawn.move_to(3, 1, board)
+        black_pawn.en_passant(3, 2, board)
+        expect(chess_board.piece_at(3, 2)).to be(black_pawn)
+        expect(chess_board.piece_at(4, 1)).to be_nil
+      end
+    end
+    
+
+    context 'when white pawn does a double step' do
+      subject(:black_pawn) { described_class.create_piece(-1) }
+      let(:white_pawn) { described_class.create_piece(1) }
+      let(:chess_board) { Chessboard.new }
+      before do
+        chess_board.add_piece(white_pawn, 1, 1)
+        chess_board.add_piece(black_pawn, 4, 1)
+      end
+      it 'captures white pawn and places black on the spot' do
+        board = chess_board.board_array
+        white_pawn.move_to(3, 1, board)
+        black_pawn.en_passant(3, 2, board)
+        expect(chess_board.piece_at(3, 2)).to be(black_pawn)
+        expect(chess_board.piece_at(3, 1)).to be_nil
       end
     end
   end
