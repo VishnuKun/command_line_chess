@@ -96,14 +96,16 @@ class Piece
     # make the current spot.piece = nil
     current_spot = find_spot(current_piece, board)
     current_spot.piece = nil
+    current_piece.moved = true
     # find the destination spot
     destination = board[row][column]
     # check if the desination isn't inhabited by friendly piece
-    return unless destination.empty? || current_piece.color != destination.piece.color
+    return unless destination.empty? || current_piece.color != destination
 
     # make the destination_spot.piece = piece
     destination.piece = current_piece
-    return unless current_piece.instance_of?(Pawn) && destination.row - current_spot.row == 2
+    # handle en_passant case
+    return unless current_piece.is_a?(Pawn) && (destination.row - current_spot.row).abs == 2
 
     current_piece.moved_two_spots = true
   end
@@ -142,7 +144,7 @@ class Piece
   def find_spot(piece, spot_array)
     spot_array.each do |row|
       row.each do |spot|
-        return spot if spot.piece === piece
+        return spot if spot.piece == piece
       end
     end
   end
