@@ -15,7 +15,7 @@ describe Knight do
         chess_board.add_piece(knight, 3, 4)
       end
       it 'returns correct number of moves' do
-        expect(knight.valid_moves).to contain_exactly(
+        expect(knight.valid_moves(chess_board.board_array)).to contain_exactly(
           [1, 3], [1, 5], [2, 2], [2, 6], [4, 2], [4, 6], [5, 3], [5, 5]
         )
       end
@@ -30,7 +30,7 @@ describe Knight do
         chess_board.add_piece(pawn, 5, 5)
       end
       it 'returns correct number of moves' do
-        expect(knight.valid_moves).to contain_exactly(
+        expect(knight.valid_moves(chess_board.board_array)).to contain_exactly(
           [1, 3], [1, 5], [2, 2], [2, 6], [4, 2], [4, 6], [5, 3]
         )
       end
