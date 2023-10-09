@@ -102,6 +102,9 @@ class Piece
     # check if the desination isn't inhabited by friendly piece
     return unless destination.empty? || current_piece.color != destination
 
+    # capture enemy piece if present
+    capture_at(row, column, board) if destination.piece && current_piece.color != destination.piece.color
+
     # make the destination_spot.piece = piece
     destination.piece = current_piece
     # handle en_passant case
