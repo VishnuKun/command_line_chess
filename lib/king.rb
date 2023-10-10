@@ -6,10 +6,6 @@ require_relative 'pieces'
 require_relative 'chessboard'
 # King
 class King < Piece
-  def initialize(piece_id)
-    super(piece_id)
-  end
-
   # Returns valid moves for the king
   def valid_king_moves(spot, board)
     moves = []
