@@ -133,7 +133,7 @@ class King < Piece
   # Checks if the king can castle to the right
   def can_castle_to_right?(king_spot, board)
     # ! right Rook must exist and not be moved
-    return false unless board[king_spot.row][7].piece.is_a?(Rook) && !board[king_spot.row][].piece.moved
+    return false unless board[king_spot.row][7].piece.is_a?(Rook) && !board[king_spot.row][king_spot.column].piece.moved
     # ! Path between Rook and King should be clear
     return false if board[king_spot.row][5].piece || board[king_spot.row][6].piece
     # ! King should not be in check after castling
