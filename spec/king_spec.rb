@@ -57,9 +57,9 @@ describe King do
       before do
         chess_board.add_piece(king, 0, 4)
       end
-      xit 'moves the piece to the correct position' do
-        king.move_to(1, 5)
-        expect(king.position).to eq([1, 5])
+      it 'moves the piece to the correct position' do
+        king.move_to(1, 5, chess_board.board_array)
+        expect(chess_board.piece_at(1, 5)).to eq(king)
       end
     end
   end
@@ -74,15 +74,15 @@ describe King do
         chess_board.add_piece(king, 1, 4)
         chess_board.add_piece(pawn, 2, 5)
       end
-      xit 'removes the piece at specified position' do
-        king.capture_at(2, 5)
-        expect(chess_board.piece_at(2, 5)).to be_nil
+      it 'removes the piece at specified position' do
+        king.capture_at(2, 5, chess_board.board_array)
+        expect(chess_board.piece_at(2, 5)).to eq(king)
       end
     end
   end
 
-  describe '#castle' do
-    context 'when castling is possible' do
+  describe '#castle_left' do
+    context 'when path is clear at row 7' do
       subject(:white_king) { King.new(6) }
       let(:chess_board) { Chessboard.new }
       let(:left_rook) { Rook.new(4) }
@@ -92,19 +92,17 @@ describe King do
         chess_board.add_piece(white_king, 7, 4)
         chess_board.add_piece(left_rook, 7, 0)
         chess_board.add_piece(right_rook, 7, 7)
-
-        allow(chess_board).to receive(:castle_possible?).and_return(true)
       end
-      xit 'exchanges the position of the left rook and king' do
-        white_king.castle(left_rook)
+      it 'exchanges the position of the left rook and king' do
+        white_king.castle_left(chess_board.board_array)
 
-        expect(white_king.position).to eq([7, 2])
-        expect(left_rook.position).to eq([7, 3])
-        expect(right_rook.position).to eq([7, 7])
+        expect(chess_board.piece_at(7, 7)).to eq(right_rook)
+        expect(chess_board.piece_at(7, 2)).to eq(white_king)
+        expect(chess_board.piece_at(7, 3)).to eq(left_rook)
       end
     end
 
-    context 'when a piece is inbetween' do
+    context 'when piece is at (7, 1)' do
       subject(:white_king) { King.new(6) }
       let(:chess_board) { Chessboard.new }
       let(:left_rook) { Rook.new(4) }
@@ -117,14 +115,14 @@ describe King do
         chess_board.add_piece(right_rook, 7, 7)
         chess_board.add_piece(knight, 7, 1)
 
-        allow(chess_board).to receive(:castle_possible?).and_return(false)
       end
-      xit "doesn't change the positions of the rook and king" do
-        white_king.castle(left_rook)
+      it "doesn't change the positions of the rook and king" do
+        white_king.castle_left(chess_board.board_array)
 
-        expect(white_king.position).to eq([7, 4])
-        expect(left_rook.position).to eq([7, 0])
-        expect(right_rook.position).to eq([7, 7])
+        expect(chess_board.piece_at(7, 4)).to eq(white_king)
+        expect(chess_board.piece_at(7, 0)).to eq(left_rook)
+        expect(chess_board.piece_at(7, 7)).to eq(right_rook)
+        expect(chess_board.piece_at(7, 1)).to eq(knight)
       end
     end
   end
