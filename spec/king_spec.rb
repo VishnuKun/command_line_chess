@@ -126,4 +126,46 @@ describe King do
       end
     end
   end
+
+  describe '#castle_right' do 
+    context 'when king is in check' do 
+      subject(:king) { King.new(-5) }
+      let(:rook) { Rook.new(-4) }
+      let(:chess_board) { Chessboard.new }
+      let(:enemy_queen) { Queen.new(5) }
+
+      before do 
+        chess_board.add_piece(king, 7, 4)
+        chess_board.add_piece(rook, 7, 7)
+        chess_board.add_piece(enemy_queen, 4, 7)
+      end
+
+      it "doesn't perform castling" do 
+        king.castle_right(chess_board.board_array)
+
+        expect(chess_board.piece_at(7, 4)).to eq(king)
+        expect(chess_board.piece_at(7, 7)).to eq(rook)
+      end
+    end
+
+    context 'when king will be in check after performing castling' do 
+      subject(:king) { King.new(-5) }
+      let(:rook) { Rook.new(-4) }
+      let(:chess_board) { Chessboard.new }
+      let(:enemy_queen) { Queen.new(5) }
+
+      before do 
+        chess_board.add_piece(king, 7, 4)
+        chess_board.add_piece(rook, 7, 7)
+        chess_board.add_piece(enemy_queen, 0, 6)
+      end
+
+      it "doesn't perform castling" do 
+        king.castle_right(chess_board.board_array)
+
+        expect(chess_board.piece_at(7, 4)).to eq(king)
+        expect(chess_board.piece_at(7, 7)).to eq(rook)
+      end
+    end
+  end
 end
