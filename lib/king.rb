@@ -66,4 +66,74 @@ class King < Piece
     end
     false
   end
+
+  # performs castling to the left
+  def castle_left(board)
+    king = self
+    king_spot = find_spot(king, board)
+    # check if the king can castle
+    return unless can_castle?(king_spot, board)
+    # check for left rook
+    return unless can_castle_to_left?(king_spot, board)
+
+    # move the king and the rook accordingly
+    # get rook's spot
+    rook_spot = board[0][0]
+    rook = rook_spot.piece
+    # move king to column - 2
+    king.move_to(king_spot.row, king_spot.column - 2, board)
+    # move rook to column + 3
+    rook.move_to(king_spot.row, 3, board)
+  end
+  
+  # performs castling to the right
+  def castle_right(board)
+    king = self
+    king_spot = find_spot(king, board)
+    # check if the king can castle
+    return unless can_castle?(king_spot, board)
+    # check for left rook
+    return unless can_castle_to_right?(king_spot, board)
+  
+    # move the king and the rook accordingly
+    # get rook's spot
+    rook_spot = board[0][7]
+    rook = rook_spot.piece
+    # move king to column - 2
+    king.move_to(king_spot.row, king_spot.column + 2, board)
+    # move rook to column + 3
+    rook.move_to(king_spot.row, king_spot.column + 1, board)
+  end
+
+  # Checks if the king can castle or not
+  def can_castle?(king_spot, board)
+    # ! King mustn't have moved
+    return false if king_spot.piece.moved
+    # ! King must not be in check
+    return false if in_check?(self, board, king_spot.row, king_spot.column)
+
+    true
+  end
+
+  # Checks if the king can castle to the left
+  def can_castle_to_left?(_king_spot, board)
+    # ! left Rook must exist and not be moved
+    return false unless board[0][0].piece.is_a?(Rook)
+    # ! Path between Rook and King should be clear
+    return false if board[0][1].piece || board[0][2].piece || board[0][3].piece
+
+    # else return true
+    true
+  end
+
+  # Checks if the king can castle to the right
+  def can_castle_to_right?(_king_spot, board)
+    # ! right Rook must exist and not be moved
+    return false unless board[0][7].piece.is_a?(Rook)
+    # ! Path between Rook and King should be clear
+    return false if board[0][5].piece || board[0][6].piece
+
+    # else return true
+    true
+  end
 end
