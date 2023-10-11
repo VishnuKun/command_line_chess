@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # lib/spot.rb
-
+# Spot
 class Spot
   attr_accessor :row, :column, :piece, :type
 
@@ -14,6 +14,6 @@ class Spot
 
   # checks whether the spot holds a piece or not
   def empty?
-    self.piece.nil?
+    piece.nil?
   end
 end
