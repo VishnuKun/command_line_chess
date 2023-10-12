@@ -6,8 +6,8 @@
 class Player
   attr_accessor :name, :controls_pieces
 
-  def initialize(name, color)
-    @name = name
+  def initialize(color)
+    @name = nil
     @controls_pieces = color
   end
 end
