@@ -20,6 +20,36 @@ class Game
     @player2 = Player.new('black')
   end
 
+  # sets player names for instances
+  def ask_player_names
+    loop do
+      print 'Enter name for Player 1: '
+      player1.name = gets.chomp.strip
+
+      if player1.name.empty?
+        puts 'Name cannot be empty. Please try again.'
+        next
+      end
+
+      break
+    end
+    loop do
+      print 'Enter name for Player 2: '
+      player2.name = gets.chomp.strip
+
+      if player2.name.empty?
+        puts 'Name cannot be empty. Please try again.'
+        next
+      end
+      if player2.name == player1.name
+        puts 'Name cannot be same. Please try again.'
+        next
+      end
+
+      break
+    end
+  end
+
   # creates boards initial state for gameplay
   def create_initial_board_state
     board = @game_board
