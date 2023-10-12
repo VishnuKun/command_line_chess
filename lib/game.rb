@@ -4,19 +4,23 @@
 
 require_relative 'pieces'
 require_relative 'chessboard'
+require_relative 'player'
 
 # Game
 class Game
-  attr_accessor :game_board
+  attr_accessor :game_board, :current_player, :player1, :player2
 
   # Initializes board state
   def initialize
     chessboard = Chessboard.new
     @game_board = chessboard.board_array
     create_initial_board_state
+    @current_player = nil
+    @player1 = Player.new('white')
+    @player2 = Player.new('black')
   end
 
-  # creates and places piece instances in spots of the board array
+  # creates boards initial state for gameplay
   def create_initial_board_state
     board = @game_board
     # for placing pawns
@@ -52,5 +56,137 @@ class Game
     # setting kings
     board[0][4].piece = Piece.create_piece(-5) # white king right
     board[7][4].piece = Piece.create_piece(6) # black king right
+  end
+
+  # check if the game is over or not
+  def game_over?
+    if check_mate? || stale_mate? || fifty_move_rule? || repetition? || insufficient_material? || win? || lose? || draw?
+      return true
+    end
+
+    false
+  end
+
+  # checks if current player's king is in check and has no legal moves
+  def check_mate?
+    current_player_color = current_player.controls_pieces
+    board = @game_board
+    king = nil
+    row = nil # king row
+    column = nil # king column
+    # find current player's king as per color
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |spot, column_index|
+        king = spot.piece if spot.piece.is_a?(King) && spot.piece.color == current_player_color
+        row = row_index
+        column = column_index
+      end
+    end
+    # ! Current player's king must be in check
+    return false unless in_check?(king, board, row, column)
+    # ! Current player's king must have 0 valid moves
+    return false unless king.valid_moves(board) == []
+
+    false
+  end
+
+  # checks if current player's king isn't in check and has no legal moves
+  def stale_mate?
+    current_player_color = current_player.controls_pieces
+    board = @game_board
+    king = nil
+    row = nil # king row
+    column = nil # king column
+    # find current player's king as per color
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |spot, column_index|
+        king = spot.piece if spot.piece.is_a?(King) && spot.piece.color == current_player_color
+        row = row_index
+        column = column_index
+      end
+    end
+    # ! Current player's king must not be in check
+    return false if in_check?(king, board, row, column)
+    # ! Current player's king must have 0 valid moves
+    return false unless king.valid_moves(board) == []
+
+    false
+  end
+
+  # checks if the 50 move rule is met
+  def fifty_move_rule?
+    false
+  end
+
+  # checks if the current position has been repeated three times
+  def repetition?
+    false
+  end
+
+  # checks if there are insufficent pieces for a checkmate
+  def insufficient_material?
+    # check the number of pieces for both the players
+    net_enemy_pieces = 0
+    net_current_player_pieces = 0
+
+    current_player_color = current_player.controls_pieces
+    board = @game_board
+    # find current player's king as per color
+    board.each do |row|
+      row.each do |spot|
+        # count enemy pieces
+        net_enemy_pieces += 1 if spot.piece && spot.piece.color != current_player_color
+        # count current player pieces
+        net_current_player_pieces += 1 if spot.piece && spot.piece.color == current_player_color
+      end
+    end
+
+    # when current player has more pieces then enemy
+    return true if net_current_player_pieces <= 2 && net_enemy_pieces == 1
+    # when enemy player has more pieces then current player
+    return true if net_enemy_pieces <= 2 && net_current_player_pieces == 1
+
+    false
+  end
+
+  # checks if the current player has won
+  def win?
+    # find enemy player's king and check if its captured or not
+    current_player_color = current_player.controls_pieces
+    board = @game_board
+    enemy_king = nil
+    # find current player's king as per color
+    board.each do |row|
+      row.each do |spot|
+        enemy_king = spot.piece if spot.piece.is_a?(King) && spot.piece.color != current_player_color
+      end
+    end
+    return true if check_mate?
+
+    false
+  end
+
+  # checks if the current player has lost
+  def lose?
+    # find current player's king and check if its captured or not
+    current_player_color = current_player.controls_pieces
+    board = @game_board
+    current_player_king = nil
+    # find current player's king as per color
+    board.each do |row|
+      row.each do |spot|
+        current_player_king = spot.piece if spot.piece.is_a?(King) && spot.piece.color != current_player_color
+      end
+    end
+    return true if check_mate?
+
+    false
+  end
+
+  # checks if the match is a draw
+  def draw?
+    return true if stale_mate? || repetition? || fifty_move_rule? || insufficient_material?
+
+    false
   end
 end
