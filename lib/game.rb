@@ -23,6 +23,20 @@ class Game
     @fifty_move_rule_counter = 0
   end
 
+  # method for saving game state
+  def save_board(filename)
+    File.open(filename, 'wb') do |file|
+      file.write(Marshal.dump(game_board))
+    end
+  end
+
+  # loads previous game state
+  def load_board(filename)
+    File.open(filename, 'rb') do |file|
+      self.game_board = Marshal.load(file.read)
+    end
+  end
+
   # sets player names for instances
   def ask_player_names
     loop do
