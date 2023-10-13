@@ -175,7 +175,7 @@ class Game
   def game_board_to_string
     @game_board.map do |row|
       row.map do |spot|
-        spot.piece.nil? ? ' ' : spot.piece.to_s
+        spot.piece.nil? ? ' ' : spot.piece.symbol.to_s
       end.join('')
     end.join('/')
   end
