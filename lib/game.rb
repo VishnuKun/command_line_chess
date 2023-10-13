@@ -8,6 +8,8 @@ require_relative 'player'
 
 # Game
 class Game
+  include KingModule
+  include PieceModule
   attr_accessor :game_board, :current_player, :player1, :player2
 
   # Initializes board state
@@ -102,18 +104,23 @@ class Game
     current_player_color = current_player.controls_pieces
     board = @game_board
     king = nil
-    row = nil # king row
-    column = nil # king column
+    king_row = nil # king row
+    king_column = nil # king column
     # find current player's king as per color
     board.each_with_index do |row, row_index|
       row.each_with_index do |spot, column_index|
-        king = spot.piece if spot.piece.is_a?(King) && spot.piece.color == current_player_color
-        row = row_index
-        column = column_index
+        next unless spot.piece.is_a?(King) && spot.piece.color == current_player_color
+
+        king = spot.piece
+        king_row = row_index
+        king_column = column_index
+        break
       end
     end
+    p king_row
+    p king_column
     # ! Current player's king must be in check
-    return false unless in_check?(king, board, row, column)
+    return false unless in_check?(king, board, king_row, king_column)
     # ! Current player's king must have 0 valid moves
     return false unless king.valid_moves(board) == []
 
@@ -156,8 +163,8 @@ class Game
   # checks if there are insufficent pieces for a checkmate
   def insufficient_material?
     # check the number of pieces for both the players
-    net_enemy_pieces = 0
-    net_current_player_pieces = 0
+    white_pieces = 0
+    black_pieces = 0
 
     current_player_color = current_player.controls_pieces
     board = @game_board
@@ -165,16 +172,16 @@ class Game
     board.each do |row|
       row.each do |spot|
         # count enemy pieces
-        net_enemy_pieces += 1 if spot.piece && spot.piece.color != current_player_color
+        white_pieces += 1 if spot.piece && spot.piece.color != current_player_color
         # count current player pieces
-        net_current_player_pieces += 1 if spot.piece && spot.piece.color == current_player_color
+        black_pieces += 1 if spot.piece && spot.piece.color == current_player_color
       end
     end
 
     # when current player has more pieces then enemy
-    return true if net_current_player_pieces <= 2 && net_enemy_pieces == 1
+    return true if black_pieces <= 2 && white_pieces == 1
     # when enemy player has more pieces then current player
-    return true if net_enemy_pieces <= 2 && net_current_player_pieces == 1
+    return true if white_pieces <= 2 && black_pieces == 1
 
     false
   end
