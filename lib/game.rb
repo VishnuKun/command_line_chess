@@ -179,9 +179,9 @@ class Game
     end
 
     # when current player has more pieces then enemy
-    return true if black_pieces <= 2 && white_pieces == 1
+    return true if black_pieces <= white_pieces && white_pieces == 1
     # when enemy player has more pieces then current player
-    return true if white_pieces <= 2 && black_pieces == 1
+    return true if white_pieces <= black_pieces && black_pieces == 1
 
     false
   end
