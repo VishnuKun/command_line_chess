@@ -159,7 +159,25 @@ class Game
 
   # checks if the current position has been repeated three times
   def repetition?
+    current_board_state = game_board_to_string
+    # store previous board states
+    previous_board_states = []
+    # convert current board state to string representation
+    # check if the current positions has occured two times before
+    return true if previous_board_states.count(current_board_state) >= 2
+
+    # else add current state to previous board states
+    previous_board_states << current_board_state
     false
+  end
+
+  # Convert the game board to a string representation
+  def game_board_to_string
+    @game_board.map do |row|
+      row.map do |spot|
+        spot.piece.nil? ? ' ' : spot.piece.to_s
+      end.join('')
+    end.join('/')
   end
 
   # checks if there are insufficent pieces for a checkmate
