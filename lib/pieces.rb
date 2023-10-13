@@ -3,7 +3,7 @@
 # lib/pieces.rb
 require_relative 'pieces_module'
 
-# Piece 
+# Piece
 class Piece
   include PieceModule
   attr_accessor :piece_id, :captured, :moved, :symbol, :color
@@ -79,10 +79,22 @@ class Piece
   end
 end
 
+# Knight
+class Knight < Piece
+end
+
+# Bishop
+class Bishop < Piece
+end
+
+# Rook
+class Rook < Piece
+end
+
+# Queen
+class Queen < Piece
+end
+
 require_relative 'pawn'
-require_relative 'knight'
-require_relative 'bishop'
-require_relative 'rook'
-require_relative 'queen'
 require_relative 'king'
 require_relative 'chessboard'
