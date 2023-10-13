@@ -215,7 +215,6 @@ module PieceModule
     moves
   end
 
-  # gives valid spots on board where knight can move to
   def valid_knight_moves(spot, board)
     moves = []
     b = board
@@ -223,14 +222,18 @@ module PieceModule
     y = spot.column
     piece_class = spot.piece.piece_id
     possible_spots = [
-      b[x - 2][y - 1], b[x - 2][y + 1],
-      b[x - 1][y - 2], b[x - 1][y + 2],
-      b[x + 1][y - 2], b[x + 1][y + 2],
-      b[x + 2][y - 1], b[x + 2][y + 1]
+      [x - 2, y - 1], [x - 2, y + 1],
+      [x - 1, y - 2], [x - 1, y + 2],
+      [x + 1, y - 2], [x + 1, y + 2],
+      [x + 2, y - 1], [x + 2, y + 1]
     ]
-    # check if all the possible spots doesn't contain any friendly piece
+    # check if all the possible spots are within the board and don't contain any friendly piece
     possible_spots.each do |move|
-      moves << [move.row, move.column] if move && (move.empty? || enemy_piece?(self, move.piece))
+      row, col = move
+      if row.between?(0, 7) && col.between?(0, 7)
+        move_spot = b[row][col]
+        moves << [move_spot.row, move_spot.column] if move_spot.empty? || enemy_piece?(self, move_spot.piece)
+      end
     end
     moves
   end
