@@ -10,7 +10,7 @@ require_relative 'player'
 class Game
   include KingModule
   include PieceModule
-  attr_accessor :game_board, :current_player, :player1, :player2
+  attr_accessor :game_board, :current_player, :player1, :player2, :fifty_move_rule_counter
 
   # Initializes board state
   def initialize
@@ -20,6 +20,7 @@ class Game
     @current_player = nil
     @player1 = Player.new('white')
     @player2 = Player.new('black')
+    @fifty_move_rule_counter = 0
   end
 
   # sets player names for instances
@@ -117,8 +118,6 @@ class Game
         break
       end
     end
-    p king_row
-    p king_column
     # ! Current player's king must be in check
     return false unless in_check?(king, board, king_row, king_column)
     # ! Current player's king must have 0 valid moves
@@ -150,8 +149,11 @@ class Game
     false
   end
 
-  # checks if the 50 move rule is met
+  # checks there's no capture or no pawn movement for 50  consecutive moves
   def fifty_move_rule?
+    counter = @fifty_move_rule_counter
+    return true if counter >= 50
+
     false
   end
 
