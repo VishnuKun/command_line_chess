@@ -69,4 +69,12 @@ module GameModule
     puts "Game's Over!"
     puts "Winner is #{winner} and loser is #{loser}"
   end
+
+  # checks if the user input is valid or not
+  def valid_user_input?(input)
+    pattern = /^[a-h][1-8]$/
+    return true if input.match?(pattern)
+
+    false
+  end
 end
