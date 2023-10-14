@@ -25,10 +25,31 @@ module GameModule
     load_filename = 'game_state_load.sav'
 
     # Check if the game is over or the game finishes
-    if game_over?
-      # Delete the state files
-      File.delete(save_filename) if File.exist?(save_filename)
-      File.delete(load_filename) if File.exist?(load_filename)
+    return unless game_over?
+
+    # Delete the state files
+    File.delete(save_filename) if File.exist?(save_filename)
+    File.delete(load_filename) if File.exist?(load_filename)
+  end
+
+  # prints the board to the screen
+  def print_board(board)
+    turn = 1
+    b = board
+    puts "   A   B   C   D   E   F   G   H "
+    b.each do |row|
+      print "#{turn}."
+      row.each do |spot|
+        if spot.piece
+          print " #{spot.piece.symbol} "
+        else
+          print " #{spot.type} " 
+        end
+        print '|'
+      end
+      turn += 1
+      puts
+      puts '-' * (row.length * 4) if turn <= 8
     end
-  end  
+  end
 end
