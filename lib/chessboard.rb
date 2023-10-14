@@ -54,7 +54,7 @@ class Chessboard
   def add_squares(board_array)
     board_array.each_with_index do |row, row_index|
       row.each_with_index do |spot, column_index|
-        color = (row_index + column_index).even? ? '░░' : '██'
+        color = (row_index + column_index).even? ? '░' : '█'
         spot.type = color
       end
     end
