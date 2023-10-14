@@ -11,6 +11,7 @@ require_relative 'game_module'
 class Game
   include GameModule
   include KingModule
+  include PawnModule
   include PieceModule
   attr_accessor :game_board, :current_player, :player1, :player2, :fifty_move_rule_counter
 
@@ -54,13 +55,65 @@ class Game
     end
   end
 
-  # starts new game
-  def start_game
-    puts "Starting....Let's begin!"
-    introduction
-    print_board(@game_board)
-    # Ask player to enter their names
-    ask_player_names
+  # Starts a new game
+  def start_game; end
+
+  # Helper method to get a valid target square from the user
+  def get_valid_target_square(current_player)
+    print "#{current_player.name} enter piece's location which you want to move : "
+    target = gets.chomp.strip
+    loop do
+      break if valid_user_input?(target)
+
+      puts 'Invalid input! Square must have a piece in it.'
+      print "#{current_player.name}, select the piece you want to move: "
+      target = gets.chomp.strip
+    end
+    # return location in [row, column] format
+    convert_alphanumeric_to_indices(target)
+  end
+
+  # Helper method to get a valid destination square from the user
+  def get_valid_destination_square(current_player, possible_moves)
+    print "#{current_player.name} , enter destination square."
+    destination = gets.chomp.strip
+    destination = convert_alphanumeric_to_indices(destination)
+    loop do
+      break if possible_moves.include?(destination)
+
+      puts 'Invalid location selected! Please enter a valid destination.'
+      print "#{current_player.name}, select the square where you want to move your piece to: "
+      destination = gets.chomp.strip
+      destination = convert_alphanumeric_to_indices(destination)
+    end
+    destination
+  end
+
+  # convert's the input given by user into indices returns array containing row and column
+  def convert_alphanumeric_to_indices(value)
+    string = value.chars
+    row = string[1].to_i - 1
+    column = string[0].downcase
+    # update the column as per alphabet
+    case column
+    when 'a'
+      column = 0
+    when 'b'
+      column = 1
+    when 'c'
+      column = 2
+    when 'd'
+      column = 3
+    when 'e'
+      column = 4
+    when 'f'
+      column = 5
+    when 'g'
+      column = 6
+    when 'h'
+      column = 7
+    end
+    [row, column]
   end
 
   # sets player names for instances
