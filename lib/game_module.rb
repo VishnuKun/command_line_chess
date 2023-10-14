@@ -36,20 +36,37 @@ module GameModule
   def print_board(board)
     turn = 1
     b = board
-    puts "   A   B   C   D   E   F   G   H "
+    puts '   A   B   C   D   E   F   G   H '
     b.each do |row|
       print "#{turn}."
       row.each do |spot|
         if spot.piece
           print " #{spot.piece.symbol} "
         else
-          print " #{spot.type} " 
+          print " #{spot.type} "
         end
         print '|'
       end
       turn += 1
       puts
+      print '--' if turn <= 8
       puts '-' * (row.length * 4) if turn <= 8
     end
+  end
+
+  # explains the rules for the game
+  def introduction
+    query = <<~INTRO
+      Welcome to the Command Line Chess Game!
+      ---------------------------------------
+      • In this game you can will play the classic game of chess against your opponent.
+      • This is a two player game that involves each player to make a choice on their turns.
+      • You can save the game by typing 'save' on the command line. If you wish to play sometime later, you can load the game from the previous state.
+      • To move a piece on your turn, you just have to type the location of the piece you wish to move and the location where you want the piece to move to.
+      • Example : if you want to move a pawn which is at 'A7' to 'A6' , just type these locations one by one. First for selecting the piece, second for moving the piece. And you are good to go.
+      ---------------------------------------
+      Lets start the game now!
+    INTRO
+    puts query
   end
 end
