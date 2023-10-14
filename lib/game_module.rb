@@ -19,21 +19,14 @@ module GameModule
   end
 
   # Deletes the state files if the game finishes or the game is over
-  def delete_state_files
-    # Specify the filenames for the state files
-    save_filename = 'game_state.sav'
-    load_filename = 'game_state_load.sav'
-
-    # Check if the game is over or the game finishes
-    return unless game_over?
-
+  def delete_state_files(filename)
     # Delete the state files
-    File.delete(save_filename) if File.exist?(save_filename)
-    File.delete(load_filename) if File.exist?(load_filename)
+    File.delete(filename) if File.exist?(filename)
   end
 
   # prints the board to the screen
   def print_board(board)
+    puts
     turn = 1
     b = board
     puts '   A   B   C   D   E   F   G   H '
@@ -52,6 +45,7 @@ module GameModule
       print '--' if turn <= 8
       puts '-' * (row.length * 4) if turn <= 8
     end
+    puts
   end
 
   # explains the rules for the game
