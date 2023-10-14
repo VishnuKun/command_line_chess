@@ -69,4 +69,10 @@ module GameModule
     INTRO
     puts query
   end
+
+  # Declares winner and loser of the game
+  def outro(winner, loser)
+    puts "Game's Over!"
+    puts "Winner is #{winner} and loser is #{loser}"
+  end
 end
