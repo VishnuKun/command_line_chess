@@ -5,9 +5,11 @@
 require_relative 'pieces'
 require_relative 'chessboard'
 require_relative 'player'
+require_relative 'game_module'
 
 # Game
 class Game
+  include GameModule
   include KingModule
   include PieceModule
   attr_accessor :game_board, :current_player, :player1, :player2, :fifty_move_rule_counter
@@ -23,18 +25,42 @@ class Game
     @fifty_move_rule_counter = 0
   end
 
-  # method for saving game state
-  def save_board(filename)
-    File.open(filename, 'wb') do |file|
-      file.write(Marshal.dump(game_board))
+  # starts the game
+  def play_game
+    # if state file exists then ask user would they like to continue the last game where they left?
+    if File.exist?('game_state.sav')
+      puts 'A game state file exists! Would you like to continue the game from where you left it? '
+      puts 'Or start a new game?'
+      print "Type 'y' to continue the previous game' or 'n' to start a new game : "
+      response = gets.chomp.strip
+      loop do
+        if response == 'y'
+          load_board('game_state.sav')
+          break
+        elsif response == 'n'
+          delete_state_files('game_state.sav')
+          break
+        else
+          puts "Error invalid response: #{response}"
+          puts 'Please enter y or n only.'
+          print "Type 'y' to continue the previous game' or 'n' to start a new game : "
+          response = gets.chomp.strip
+        end
+      end
+      start_game
+    else
+      puts 'No game state file found. Starting a new game...'
+      start_game
     end
   end
 
-  # loads previous game state
-  def load_board(filename)
-    File.open(filename, 'rb') do |file|
-      self.game_board = Marshal.load(file.read)
-    end
+  # starts new game
+  def start_game
+    puts "Starting....Let's begin!"
+    introduction
+    print_board(@game_board)
+    # Ask player to enter their names
+    ask_player_names
   end
 
   # sets player names for instances
@@ -47,6 +73,7 @@ class Game
         puts 'Name cannot be empty. Please try again.'
         next
       end
+      puts "#{player1.name} will control the #{player1.controls_pieces} pieces."
 
       break
     end
@@ -62,6 +89,7 @@ class Game
         puts 'Name cannot be same. Please try again.'
         next
       end
+      puts "#{player2.name} will control the #{player2.controls_pieces} pieces."
 
       break
     end
