@@ -38,7 +38,7 @@ module PawnModule
     y = spot.column
     b = board
     pawn = spot.piece
-    direction = pawn.color == 'white' ? -1 : 1
+    direction = pawn.color == 'black' ? -1 : 1
 
     # check if the pawn has already moved
     if (x + (2 * direction)).between?(0, 7) && !pawn.moved
