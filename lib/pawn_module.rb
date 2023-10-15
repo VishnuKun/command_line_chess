@@ -4,22 +4,40 @@
 module PawnModule
   # performs en-passant action
   def en_passant(row, column, board)
-    killer_pawn = self
-    direction = killer_pawn.color == 'white' ? -1 : 1
-    current_spot = find_spot(killer_pawn, board)
-    en_passant_spot = board[current_spot.row + direction][current_spot.column]
+    piece = self
+    # set direction
+    direction = piece.color == 'white' ? -1 : 1
+    # find piece's spot
+    piece_spot = find_spot(piece, board)
+    # find enemy piece and its spot
+    # ! give row from piece and column from destination
+    en_passant_spot = board[piece_spot.row][column]
+    # get enemy piece
     killed_pawn = en_passant_spot.piece
-    return unless killed_pawn && killed_pawn.moved_two_spots
-    return unless killed_pawn.is_a?(Pawn) && killed_pawn.color != killer_pawn.color
+    # check if en passant is possible or not
+    return unless en_passant_possible?(row, column, board)
 
     # capture target pawn
     killed_pawn.captured = true
     en_passant_spot.piece = nil
     # remove your piece from its original spot
-    current_spot.piece = nil
+    piece_spot.piece = nil
     # place your piece on the diagonal spot
-    diagonal_spot = board[row][column]
-    diagonal_spot.piece = killer_pawn
+    destination = board[row][column]
+    destination.piece = piece
+  end
+
+  # checks if en passant is possible
+  def en_passant_possible?(_row, column, board)
+    piece = self
+    piece_spot = find_spot(piece, board)
+    en_passant_spot = board[piece_spot.row][column]
+    killed_pawn = en_passant_spot.piece
+
+    return false unless killed_pawn && killed_pawn.moved_two_spots
+    return false unless killed_pawn.is_a?(Pawn) && killed_pawn.color != piece.color
+
+    true
   end
 
   # promotes the pawn to desired position
@@ -57,13 +75,18 @@ module PawnModule
       left_diagonal = b[x + direction][y - 1]
       moves << [left_diagonal.row, left_diagonal.column] if left_diagonal.piece && enemy_piece?(pawn,
                                                                                                 left_diagonal.piece)
+      moves << [left_diagonal.row, left_diagonal.column] if pawn.en_passant_possible?(left_diagonal.row,
+                                                                                      left_diagonal.column, board)
     end
 
     # check for the right diagonal move
     if (y < b[x].length - 1) && (x + direction).between?(0, 7)
       right_diagonal = b[x + direction][y + 1]
+      # add the right diagonal move if enemy piece is present or when en-passant is possible
       moves << [right_diagonal.row, right_diagonal.column] if right_diagonal.piece && enemy_piece?(pawn,
                                                                                                    right_diagonal.piece)
+      moves << [right_diagonal.row, right_diagonal.column] if pawn.en_passant_possible?(right_diagonal.row,
+                                                                                        right_diagonal.column, board)
     end
 
     # Check if the pawn has reached the farthest point and ready for promotion
