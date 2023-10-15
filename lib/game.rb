@@ -56,17 +56,67 @@ class Game
   end
 
   # Starts a new game
-  def start_game; end
+  def start_game
+    introduction
+    puts
+    ask_player_names
+    print_board(@game_board)
+
+    @current_player = @player1
+    loop do
+      # ask current player to select their choice of piece
+      target = get_valid_target_square(@current_player)
+      row = target[0]
+      column = target[1]
+      piece = @game_board[row][column].piece
+      # check if the piece selected belongs to the current player only
+      # current player shouldn't be able to choose enemy piece
+      if piece.color != @current_player.controls_pieces
+        puts "You can't choose enemy piece!"
+        target = get_valid_target_square(@current_player)
+        row = target[0]
+        column = target[1]
+        piece = @game_board[row][column].piece
+        next
+      end
+      # check if a piece exists in the given location
+      # check is locked or not
+      moves = piece.valid_moves(@game_board)
+      if piece.nil? || moves.empty?
+        puts "#{piece.symbol} is either locked or has no possible moves" unless piece.nil?
+        puts "The chosen square at #{target} has no piece." if piece.nil?
+        puts 'Please select another square instead of previous one.'
+        next
+      end
+      # ask current player to select their choice of square to move piece into
+      location = get_valid_destination_square(piece, @current_player, moves)
+      loc_row = location[0]
+      loc_column = location[1]
+      # move the piece into the destination square
+      piece.move_to(loc_row, loc_column, @game_board)
+
+      # print the board right after to show movement
+      print_board(@game_board)
+
+      # check if the game is over after each movement
+
+      @current_player = if @current_player == @player1
+                          @player2
+                        else
+                          @player1
+                        end
+    end
+  end
 
   # Helper method to get a valid target square from the user
   def get_valid_target_square(current_player)
-    print "#{current_player.name} enter piece's location which you want to move : "
+    print "#{current_player.name} enter piece's location => "
     target = gets.chomp.strip
     loop do
       break if valid_user_input?(target)
 
       puts 'Invalid input! Square must have a piece in it.'
-      print "#{current_player.name}, select the piece you want to move: "
+      print "#{current_player.name} enter piece's location => "
       target = gets.chomp.strip
     end
     # return location in [row, column] format
@@ -74,15 +124,15 @@ class Game
   end
 
   # Helper method to get a valid destination square from the user
-  def get_valid_destination_square(current_player, possible_moves)
-    print "#{current_player.name} , enter destination square."
+  def get_valid_destination_square(piece, current_player, possible_moves)
+    print "#{current_player.name} move '#{piece.symbol} ' to =>  "
     destination = gets.chomp.strip
     destination = convert_alphanumeric_to_indices(destination)
     loop do
       break if possible_moves.include?(destination)
 
       puts 'Invalid location selected! Please enter a valid destination.'
-      print "#{current_player.name}, select the square where you want to move your piece to: "
+      print "#{current_player.name} move '#{piece.symbol} ' to =>  "
       destination = gets.chomp.strip
       destination = convert_alphanumeric_to_indices(destination)
     end
@@ -197,7 +247,7 @@ class Game
 
   # checks if current player's king is in check and has no legal moves
   def check_mate?
-    current_player_color = current_player.controls_pieces
+    current_player_color = @current_player.controls_pieces
     board = @game_board
     king = nil
     king_row = nil # king row
