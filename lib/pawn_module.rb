@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/pawn_module.rb
 
 # contains methods for pawn
@@ -5,8 +7,6 @@ module PawnModule
   # performs en-passant action
   def en_passant(row, column, board)
     piece = self
-    # set direction
-    direction = piece.color == 'white' ? -1 : 1
     # find piece's spot
     piece_spot = find_spot(piece, board)
     # find enemy piece and its spot
@@ -34,7 +34,7 @@ module PawnModule
     en_passant_spot = board[piece_spot.row][column]
     killed_pawn = en_passant_spot.piece
 
-    return false unless killed_pawn && killed_pawn.moved_two_spots
+    return false unless killed_pawn&.moved_two_spots
     return false unless killed_pawn.is_a?(Pawn) && killed_pawn.color != piece.color
 
     true
