@@ -2,10 +2,12 @@
 
 # lib/pieces.rb
 require_relative 'pieces_module'
+require_relative 'pawn_module'
 
 # Piece
 class Piece
   include PieceModule
+  include PawnModule
   attr_accessor :piece_id, :captured, :moved, :symbol, :color
 
   def initialize(piece_id)
@@ -41,6 +43,9 @@ class Piece
     current_piece = self
     # make the current spot.piece = nil
     current_spot = find_spot(current_piece, board)
+    # handle diagonal movement of pawn during en-passant
+    return current_piece.en_passant(row, column, board) if current_piece.en_passant_possible?(row, column, board)
+
     current_spot.piece = nil
     current_piece.moved = true
     # find the destination spot
@@ -53,7 +58,7 @@ class Piece
 
     # make the destination_spot.piece = piece
     destination.piece = current_piece
-    # handle en_passant case
+    # handle double step case
     return unless current_piece.is_a?(Pawn) && (destination.row - current_spot.row).abs == 2
 
     current_piece.moved_two_spots = true
