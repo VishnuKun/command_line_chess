@@ -41,10 +41,11 @@ class Piece
   # moves the piece to the given position
   def move_to(row, column, board)
     current_piece = self
-    # make the current spot.piece = nil
     current_spot = find_spot(current_piece, board)
     # handle diagonal movement of pawn during en-passant
-    return current_piece.en_passant(row, column, board) if current_piece.en_passant_possible?(row, column, board)
+    if current_piece.is_a?(Pawn) && current_piece.en_passant_possible?(row, column, board)
+      return current_piece.en_passant(row, column, board)
+    end
 
     current_spot.piece = nil
     current_piece.moved = true
