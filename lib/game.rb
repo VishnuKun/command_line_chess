@@ -69,21 +69,21 @@ class Game
       row = target[0]
       column = target[1]
       piece = @game_board[row][column].piece
+      # check if a piece exists in the given location
+      if piece.nil?
+        puts "You can't choose empty square!"
+        next
+      end
       # check if the piece selected belongs to the current player only
       # current player shouldn't be able to choose enemy piece
       if piece.color != @current_player.controls_pieces
         puts "You can't choose enemy piece!"
-        target = get_valid_target_square(@current_player)
-        row = target[0]
-        column = target[1]
-        piece = @game_board[row][column].piece
         next
       end
-      # check if a piece exists in the given location
       # check is locked or not
       moves = piece.valid_moves(@game_board)
-      if piece.nil? || moves.empty?
-        puts "#{piece.symbol} is either locked or has no possible moves" unless piece.nil?
+      if moves.empty?
+        puts "#{piece.symbol} is locked or has no possible moves" unless piece.nil?
         puts "The chosen square at #{target} has no piece." if piece.nil?
         puts 'Please select another square instead of previous one.'
         next
@@ -94,11 +94,48 @@ class Game
       loc_column = location[1]
       # move the piece into the destination square
       piece.move_to(loc_row, loc_column, @game_board)
-
+      # if its a pawn and it has reached top
+      # turn promotion variable to true
+      if piece.is_a?(Pawn)
+        piece.can_be_promoted = true if piece.color == 'white' && loc_row == 7
+        piece.can_be_promoted = true if piece.color == 'black' && loc_row.zero?
+      end
+      # handle promotion case
+      if piece.is_a?(Pawn) && piece.can_be_promoted
+        # ask for key for promotion
+        key = piece.get_promotion_instance_id
+        # perform promotion
+        piece.promote_to(key, @game_board)
+      end
       # print the board right after to show movement
       print_board(@game_board)
 
       # check if the game is over after each movement
+      if game_over?
+        winner = nil
+        loser = nil
+        # set winner and loser variables
+        if win?
+          winner = @current_player
+          loser = if @current_player == @player1
+                    @player2
+                  else
+                    @player1
+                  end
+        end
+        if lose?
+          winner = @current_player
+          loser = if @current_player == @player1
+                    @player2
+                  else
+                    @player1
+                  end
+        end
+        # display outro
+        outro(winner, loser)
+        # break loop and finish the game
+        break
+      end
 
       @current_player = if @current_player == @player1
                           @player2
