@@ -2,12 +2,10 @@
 
 # lib/pieces.rb
 require_relative 'pieces_module'
-require_relative 'pawn_module'
 
 # Piece
 class Piece
   include PieceModule
-  include PawnModule
   attr_accessor :piece_id, :captured, :moved, :symbol, :color
 
   def initialize(piece_id)
