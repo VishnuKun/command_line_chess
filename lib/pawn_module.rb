@@ -49,6 +49,36 @@ module PawnModule
     current_spot.piece = promoted_piece
   end
 
+  # helper method for promotion
+  def get_promotion_instance_id
+    pawn = self
+    instance_id = nil
+    puts 'Promotion is available for the pawn!'
+    puts 'Promotion Keys :- Knight => 1, Bishop => 2, Rook => 3, Queen => 4'
+    print 'Please enter promotion key : '
+    response = gets.chomp
+    # check if the response is valid or not
+    loop do
+      break if response.to_i.between?(1, 4)
+
+      puts 'Invalid number selected! Please select among the given only.'
+      print 'Please enter promotion key : '
+      response = gets.chomp
+    end
+    # convert the response into proper id according to color
+    case response.to_i
+    when 1 # Knight
+      instance_id = pawn.color == 'white' ? -2 : 2
+    when 2 # Bishop
+      instance_id = pawn.color == 'white' ? -3 : 3
+    when 3 # Rook
+      instance_id = pawn.color == 'white' ? -4 : 4
+    when 4 # Queen
+      instance_id = pawn.color == 'white' ? -6 : 5
+    end
+    instance_id
+  end
+
   # returns the valid spots for the current pawn instance where it can be moved to
   def valid_pawn_moves(spot, board)
     moves = []
