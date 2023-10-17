@@ -164,6 +164,14 @@ class Game
   def get_valid_destination_square(piece, current_player, possible_moves)
     print "#{current_player.name} move '#{piece.symbol} ' to =>  "
     destination = gets.chomp.strip
+    # check if response is empty
+    loop do
+      break if destination != ''
+
+      puts 'Invalid response, please try again.'
+      print "#{current_player.name} move '#{piece.symbol} ' to =>  "
+      destination = gets.chomp.strip
+    end
     destination = convert_alphanumeric_to_indices(destination)
     loop do
       break if possible_moves.include?(destination)
