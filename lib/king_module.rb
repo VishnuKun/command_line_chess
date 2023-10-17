@@ -1,5 +1,6 @@
-# lib/king_module.rb
+# frozen_string_literal: true
 
+# lib/king_module.rb
 # contains methods for the King class
 module KingModule
   # Returns valid moves for the king
@@ -32,6 +33,8 @@ module KingModule
       # Check if the move puts the king in check
       moves << [row, column] unless in_check?(self, temp_board, row, column)
     end
+    # insert castling moves if possible
+    # left castling move
     moves
   end
 
@@ -107,7 +110,7 @@ module KingModule
   # Checks if the king can castle or not
   def can_castle?(king_spot, board)
     # ! King mustn't have moved
-    return false if king_spot.piece.moved
+    return false if moved
     # ! King must not be in check
     return false if in_check?(self, board, king_spot.row, king_spot.column)
 
@@ -116,10 +119,18 @@ module KingModule
 
   # Checks if the king can castle to the left
   def can_castle_to_left?(king_spot, board)
+    # Check king first
+    return false unless can_castle?(king_spot, board)
+
+    left_rook = board[king_spot.row][0].piece
     # ! left Rook must exist and not be moved
-    return false unless board[king_spot.row][0].piece.is_a?(Rook) && !board[king_spot.row][0].piece.moved
+    # check if left rook exists and it has not moved
+    return false unless left_rook && !left_rook.moved
+    return false unless left_rook.is_a?(Rook)
+
     # ! Path between Rook and King should be clear
     return false if board[king_spot.row][1].piece || board[king_spot.row][2].piece || board[king_spot.row][3].piece
+
     # ! King should not be in check after castling
     return false if in_check?(self, board, king_spot.row, king_spot.column - 2)
 
@@ -129,10 +140,18 @@ module KingModule
 
   # Checks if the king can castle to the right
   def can_castle_to_right?(king_spot, board)
+    # Check king first
+    return false unless can_castle?(king_spot, board)
+
+    right_rook = board[king_spot.row][7].piece
     # ! right Rook must exist and not be moved
-    return false unless board[king_spot.row][7].piece.is_a?(Rook) && !board[king_spot.row][king_spot.column].piece.moved
+    # check if right rook exists and it has not moved
+    return false unless right_rook && !right_rook.moved
+    return false unless right_rook.is_a?(Rook)
+
     # ! Path between Rook and King should be clear
     return false if board[king_spot.row][5].piece || board[king_spot.row][6].piece
+
     # ! King should not be in check after castling
     return false if in_check?(self, board, king_spot.row, king_spot.column + 2)
 
