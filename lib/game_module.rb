@@ -40,11 +40,13 @@ module GameModule
         end
         print '|'
       end
+      print " #{turn}."
       turn += 1
       puts
       print '--' if turn <= 8
       puts '-' * (row.length * 4) if turn <= 8
     end
+    puts '   A   B   C   D   E   F   G   H '
     puts
   end
 
