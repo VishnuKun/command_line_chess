@@ -79,6 +79,8 @@ module PieceModule
         return spot if spot.piece == piece
       end
     end
+    # piece not found, return nil or handle the case accordingly
+    nil
   end
 
   # generates valid moves for the queen
