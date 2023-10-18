@@ -29,8 +29,8 @@ module KingModule
       # push moves while checking conditions
       next unless valid_spot?(row, column) && valid_king_move?(self, board, row, column)
 
-      # Create a temporary board to check if the move puts the king in check
-      temp_board = board.dup
+      # Create a deep copy of the board to check if the move puts the king in check
+      temp_board = Marshal.load(Marshal.dump(board))
       temp_board[spot.row][spot.column].piece = nil
       temp_board[row][column].piece = self
 
@@ -110,10 +110,13 @@ module KingModule
     # get rook's spot
     rook_spot = board[king_spot.row][0]
     rook = rook_spot.piece
-    # move king to column - 2
-    king.move_to(king_spot.row, king_spot.column - 2, board)
+    king_spot.piece = nil
+    board[king_spot.row][2].piece = king
     # move rook to column + 3
-    rook.move_to(king_spot.row, king_spot.column - 1, board)
+    rook_spot.piece = nil
+    board[king_spot.row][3].piece = rook
+    king.moved = true
+    rook.moved = true
   end
 
   # performs castling to the right
@@ -132,9 +135,13 @@ module KingModule
     rook_spot = board[king_spot.row][7]
     rook = rook_spot.piece
     # move king to column - 2
-    king.move_to(king_spot.row, king_spot.column + 2, board)
+    king_spot.piece = nil
+    board[king_spot.row][6].piece = king
     # move rook to column + 3
-    rook.move_to(king_spot.row, king_spot.column + 1, board)
+    rook_spot.piece = nil
+    board[king_spot.row][5].piece = rook
+    king.moved = true
+    rook.moved = true
   end
 
   # Checks if the king can castle to the left
