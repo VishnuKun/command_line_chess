@@ -75,9 +75,8 @@ module PieceModule
   # finds the spot in which given piece is inside
   def find_spot(piece, spot_array)
     spot_array.each do |row|
-      row.each do |spot|
-        return spot if spot.piece == piece
-      end
+      spot = row.find { |spot| spot.piece == piece }
+      return spot if spot
     end
     # piece not found, return nil or handle the case accordingly
     nil
@@ -222,7 +221,7 @@ module PieceModule
     b = board
     x = spot.row
     y = spot.column
-    piece_class = spot.piece.piece_id
+    spot.piece.piece_id
     possible_spots = [
       [x - 2, y - 1], [x - 2, y + 1],
       [x - 1, y - 2], [x - 1, y + 2],
