@@ -136,7 +136,7 @@ class Game
         # break loop and finish the game
         break
       end
-
+      # update current player accordingly
       @current_player = if @current_player == @player1
                           @player2
                         else
