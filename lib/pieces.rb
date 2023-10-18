@@ -45,6 +45,15 @@ class Piece
       return current_piece.en_passant(row, column, board)
     end
 
+    # handle castling
+    if current_piece.is_a?(King) && (column - current_spot.column).abs == 2
+      # perform castling
+      # if given row is smaller - left castling
+      return castle_left(board) if column < current_spot.column
+      # if given row is greater - right castling
+      return castle_right(board) if column > current_spot.column
+    end
+
     current_spot.piece = nil
     current_piece.moved = true
     # find the destination spot
