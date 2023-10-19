@@ -6,8 +6,15 @@
 module GameModule
   # method for saving game state
   def save_board(filename)
+    data = {
+      player1_name: @player1.name,
+      player2_name: @player2.name,
+      game_board: @game_board
+    }
+    puts 'Game has been saved!'
+    puts 'You can come later and play from where you left later.'
     File.open(filename, 'wb') do |file|
-      file.write(Marshal.dump(game_board))
+      file.write(Marshal.dump(data))
     end
   end
 
