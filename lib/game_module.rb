@@ -60,6 +60,7 @@ module GameModule
       • You can save the game by typing 'save' on the command line. If you wish to play sometime later, you can load the game from the previous state.
       • To move a piece on your turn, you just have to type the location of the piece you wish to move and the location where you want the piece to move to.
       • Example : if you want to move a pawn which is at 'A7' to 'A6' , just type these locations one by one. First for selecting the piece, second for moving the piece. And you are good to go.
+      • To save the game at any point just type 'save'. It will save the game for later use.
       ---------------------------------------
       Lets start the game now!
     INTRO
