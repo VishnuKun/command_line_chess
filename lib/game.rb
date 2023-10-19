@@ -73,6 +73,12 @@ class Game
 
     @current_player = @player1
     loop do
+      # check for game over condition
+      if game_over_result = game_over?
+        display_game_result(game_over_result[:result])
+        puts "Reason: #{game_over_result[:reason]}"
+        break
+      end
       # ask current player to select their choice of piece
       target = get_valid_target_square(@current_player)
       # condition for saving the game state
@@ -131,11 +137,11 @@ class Game
       # print the board right after to show movement
       print_board(@game_board)
 
-      if game_over_result = game_over?
-        display_game_result(game_over_result[:result])
-        puts "Reason: #{game_over_result[:reason]}"
-        break
-      end
+      # if game_over_result = game_over?
+      #   display_game_result(game_over_result[:result])
+      #   puts "Reason: #{game_over_result[:reason]}"
+      #   break
+      # end
       # update current player accordingly
       @current_player = if @current_player == @player1
                           @player2
@@ -294,9 +300,6 @@ class Game
     return { result: :fifty_move_rule, reason: 'Fifty-move rule' } if fifty_move_rule?
     return { result: :repetition, reason: 'Repetition' } if repetition?
     return { result: :insufficient_material, reason: 'Insufficient material' } if insufficient_material?
-    return { result: :win, reason: "#{current_player.name} wins" } if win?
-    return { result: :lose, reason: "#{current_player.name} loses" } if lose?
-    return { result: :draw, reason: 'Draw' } if draw?
 
     false
   end
@@ -305,7 +308,13 @@ class Game
   def display_game_result(result)
     case result
     when :checkmate
-      puts 'Checkmate!'
+      # when current player checkmates i.e. wins
+      loser = current_player
+      winner = current_player == player1 ? player2 : player1
+      # when current player gets check mated i.e. losts
+
+      puts "#{winner.name} checkmated #{loser.name}!"
+      puts "#{winner.name} wins!"
     when :stalemate
       puts 'Its a Draw!'
     when :fifty_move_rule
@@ -314,12 +323,6 @@ class Game
       puts 'Its a Draw!'
     when :insufficient_material
       puts 'Its a Draw!'
-    when :win
-      puts "#{current_player.name} have won the game!"
-    when :lose
-      puts "#{current_player.name} have lost the game!"
-    when :draw
-      puts 'It\'s a draw!'
     end
   end
 
@@ -346,7 +349,7 @@ class Game
     # ! Current player's king must have 0 valid moves
     return false unless king.valid_moves(board) == []
 
-    false
+    true
   end
 
   # checks if current player's king isn't in check and has no legal moves
