@@ -34,7 +34,8 @@ module PawnModule
     en_passant_spot = board[piece_spot.row][column]
     killed_pawn = en_passant_spot.piece
 
-    return false unless killed_pawn&.moved_two_spots
+    # Check if the killed_pawn is a Pawn and it has moved two spots
+    return false unless killed_pawn.is_a?(Pawn) && killed_pawn.moved_two_spots
     return false unless killed_pawn.is_a?(Pawn) && killed_pawn.color != piece.color
 
     true
