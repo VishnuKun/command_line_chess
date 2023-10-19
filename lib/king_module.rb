@@ -18,10 +18,6 @@ module KingModule
       [0, 1] # up
     ]
 
-    # insert castling moves if possible
-    moves << [spot.row, spot.column - 2] if can_castle_to_left?(spot, board) # left castling move
-    moves << [spot.row, spot.column + 2] if can_castle_to_right?(spot, board) # left castling move
-
     # Check all directions for valid moves
     directions.each do |direction|
       row = spot.row + direction[0]
@@ -37,6 +33,32 @@ module KingModule
       # Check if the move puts the king in check
       moves << [row, column] unless in_check?(self, temp_board, row, column)
     end
+    # insert castling moves if possible
+    moves << [spot.row, spot.column - 2] if can_castle_to_left?(spot, board) # left castling move
+    moves << [spot.row, spot.column + 2] if can_castle_to_right?(spot, board) # left castling move
+
+    moves
+  end
+
+  # helper method to prevent recursion
+  def enemy_king_moves(spot, _board)
+    moves = []
+    directions = [
+      [-1, -1], # up-left
+      [-1, 1], # up-right
+      [1, -1], # down-left
+      [1, 1], # down-right
+      [-1, 0], # left
+      [1, 0], # right
+      [0, -1], # down
+      [0, 1] # up
+    ]
+    # Check all directions for valid moves
+    directions.each do |direction|
+      row = spot.row + direction[0]
+      column = spot.column + direction[1]
+      moves << [row, column]
+    end
     moves
   end
 
@@ -50,7 +72,7 @@ module KingModule
     end
   end
 
-  # Checks if the king is in check
+  # Checks if the king will be in check if it moved to given coordinates
   def in_check?(king, board, row, column)
     # Iterate through all the enemy pieces on the board
     enemy_pieces = find_enemy_pieces(king, board)
@@ -58,7 +80,7 @@ module KingModule
     enemy_pieces.any? do |spot|
       enemy = spot.piece
       # Check if the enemy piece can attack the king's current position
-      can_attack?(enemy, board, row, column)
+      can_attack?(spot, enemy, board, row, column)
     end
   end
 
@@ -70,7 +92,10 @@ module KingModule
   end
 
   # check if the piece can attack the piece at the given position
-  def can_attack?(enemy, _board, row, column)
+  def can_attack?(spot, enemy, _board, row, column)
+    # for enemy king
+    return true if enemy.is_a?(King) && enemy_king_moves(spot, _board).include?([row, column])
+
     case enemy
     when Pawn
       return true if enemy.valid_moves(_board).include?([row, column])
