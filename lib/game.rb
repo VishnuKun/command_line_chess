@@ -56,11 +56,10 @@ class Game
           response = gets.chomp.strip
         end
       end
-      start_game
     else
       puts 'No game state file found. Starting a new game...'
-      start_game
     end
+    start_game
   end
 
   # Starts a new game
@@ -74,7 +73,7 @@ class Game
     @current_player = @player1
     loop do
       # check for game over condition
-      if game_over_result = game_over?
+      if (game_over_result = game_over?)
         display_game_result(game_over_result[:result])
         puts "Reason: #{game_over_result[:reason]}"
         break
@@ -354,23 +353,32 @@ class Game
 
   # checks if current player's king isn't in check and has no legal moves
   def stale_mate?
-    current_player_color = current_player.controls_pieces
+    # current_player_color = current_player.controls_pieces
     board = @game_board
-    king = nil
-    row = nil # king row
-    column = nil # king column
+    # king = nil
+    # row = nil # king row
+    # column = nil # king column
+    white_king = nil
+    black_king = nil
     # find current player's king as per color
-    board.each_with_index do |row, row_index|
-      row.each_with_index do |spot, column_index|
-        king = spot.piece if spot.piece.is_a?(King) && spot.piece.color == current_player_color
-        row = row_index
-        column = column_index
+    board.each_with_index do |row, _row_index|
+      row.each_with_index do |spot, _column_index|
+        white_king = spot if spot.piece.is_a?(King) && spot.piece.color == 'white'
+        black_king = spot if spot.piece.is_a?(King) && spot.piece.color == 'black'
+        # row = row_index
+        # column = column_index
       end
     end
-    # ! Current player's king must not be in check
-    return false if in_check?(king, board, row, column)
-    # ! Current player's king must have 0 valid moves
-    return false unless king.valid_moves(board) == []
+    kings = [black_king, white_king]
+    kings.each do |king_spot|
+      king = king_spot.piece
+      # ! Current player's king must not be in check
+      return false if in_check?(king, board, king_spot.row, king_spot.column) && king.valid_moves(board) == []
+      # ! Current player's king must have 0 valid moves
+      return false unless king.valid_moves(board) == []
+
+      return true
+    end
 
     false
   end
