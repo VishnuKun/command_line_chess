@@ -68,8 +68,6 @@ class Game
     introduction
     puts
     # If player names are not loaded from the saved game, ask for player names
-    p player1
-    p player2
     ask_player_names if @player1.name.nil? || @player2.name.nil?
     print_board(@game_board)
 
@@ -133,30 +131,9 @@ class Game
       # print the board right after to show movement
       print_board(@game_board)
 
-      # check if the game is over after each movement
-      if game_over?
-        winner = nil
-        loser = nil
-        # set winner and loser variables
-        if win?
-          winner = @current_player
-          loser = if @current_player == @player1
-                    @player2
-                  else
-                    @player1
-                  end
-        end
-        if lose?
-          winner = @current_player
-          loser = if @current_player == @player1
-                    @player2
-                  else
-                    @player1
-                  end
-        end
-        # display outro
-        outro(winner, loser)
-        # break loop and finish the game
+      if game_over_result = game_over?
+        display_game_result(game_over_result[:result])
+        puts "Reason: #{game_over_result[:reason]}"
         break
       end
       # update current player accordingly
@@ -310,13 +287,40 @@ class Game
     board[7][4].piece = Piece.create_piece(6) # black king right
   end
 
-  # check if the game is over or not
+  # Update the game_over? method in your Game class
   def game_over?
-    if check_mate? || stale_mate? || fifty_move_rule? || repetition? || insufficient_material? || win? || lose? || draw?
-      return true
-    end
+    return { result: :checkmate, reason: 'Checkmate' } if check_mate?
+    return { result: :stalemate, reason: 'Stalemate' } if stale_mate?
+    return { result: :fifty_move_rule, reason: 'Fifty-move rule' } if fifty_move_rule?
+    return { result: :repetition, reason: 'Repetition' } if repetition?
+    return { result: :insufficient_material, reason: 'Insufficient material' } if insufficient_material?
+    return { result: :win, reason: "#{current_player.name} wins" } if win?
+    return { result: :lose, reason: "#{current_player.name} loses" } if lose?
+    return { result: :draw, reason: 'Draw' } if draw?
 
     false
+  end
+
+  # Add this method to your Game class
+  def display_game_result(result)
+    case result
+    when :checkmate
+      puts 'Checkmate!'
+    when :stalemate
+      puts 'Its a Draw!'
+    when :fifty_move_rule
+      puts 'Its a Draw!'
+    when :repetition
+      puts 'Its a Draw!'
+    when :insufficient_material
+      puts 'Its a Draw!'
+    when :win
+      puts "#{current_player.name} have won the game!"
+    when :lose
+      puts "#{current_player.name} have lost the game!"
+    when :draw
+      puts 'It\'s a draw!'
+    end
   end
 
   # checks if current player's king is in check and has no legal moves
@@ -399,30 +403,34 @@ class Game
     end.join('/')
   end
 
-  # checks if there are insufficent pieces for a checkmate
   def insufficient_material?
-    # check the number of pieces for both the players
-    white_pieces = 0
-    black_pieces = 0
+    white_material = material_count('white')
+    black_material = material_count('black')
 
-    current_player_color = current_player.controls_pieces
+    white_material <= 1 && black_material <= 1
+  end
+
+  def material_count(color)
+    material = 0
     board = @game_board
-    # find current player's king as per color
+
     board.each do |row|
       row.each do |spot|
-        # count enemy pieces
-        white_pieces += 1 if spot.piece && spot.piece.color != current_player_color
-        # count current player pieces
-        black_pieces += 1 if spot.piece && spot.piece.color == current_player_color
+        piece = spot.piece
+        next unless piece && piece.color == color
+
+        material += case piece.symbol
+                    when '♔', '♛', '♘'
+                      1
+                    when '♚', '♟'
+                      1
+                    else
+                      0
+                    end
       end
     end
 
-    # when current player has more pieces then enemy
-    return true if black_pieces <= white_pieces && white_pieces == 1
-    # when enemy player has more pieces then current player
-    return true if white_pieces <= black_pieces && black_pieces == 1
-
-    false
+    material
   end
 
   # checks if the current player has won
