@@ -37,6 +37,14 @@ class Game
       loop do
         if response == 'y'
           load_board('game_state.sav')
+          loaded_data = Marshal.load(File.read('game_state.sav'))
+
+          # Set player names from the loaded data
+          @player1.name = loaded_data[:player1_name]
+          @player2.name = loaded_data[:player2_name]
+
+          # Set the game board
+          @game_board = loaded_data[:game_board]
           break
         elsif response == 'n'
           delete_state_files('game_state.sav')
@@ -59,13 +67,22 @@ class Game
   def start_game
     introduction
     puts
-    ask_player_names
+    # If player names are not loaded from the saved game, ask for player names
+    p player1
+    p player2
+    ask_player_names if @player1.name.nil? || @player2.name.nil?
     print_board(@game_board)
 
     @current_player = @player1
     loop do
       # ask current player to select their choice of piece
       target = get_valid_target_square(@current_player)
+      # condition for saving the game state
+      if target == 'save'
+        save_board('game_state.sav')
+        break
+      end
+
       row = target[0]
       column = target[1]
       piece = @game_board[row][column].piece
@@ -90,6 +107,12 @@ class Game
       end
       # ask current player to select their choice of square to move piece into
       location = get_valid_destination_square(piece, @current_player, moves)
+      # condition for saving the game state
+      if location == 'save'
+        save_board('game_state.sav')
+        break
+      end
+
       loc_row = location[0]
       loc_column = location[1]
       # move the piece into the destination square
@@ -149,6 +172,9 @@ class Game
   def get_valid_target_square(current_player)
     print "#{current_player.name} enter piece's location => "
     target = gets.chomp.strip
+    # return save if user types so
+    return target if target == 'save'
+
     loop do
       break if valid_user_input?(target)
 
@@ -164,6 +190,9 @@ class Game
   def get_valid_destination_square(piece, current_player, possible_moves)
     print "#{current_player.name} move '#{piece.symbol} ' to =>  "
     destination = gets.chomp.strip
+    # return save if user types so
+    return destination if destination == 'save'
+
     # check if response is empty
     loop do
       break if destination != ''
