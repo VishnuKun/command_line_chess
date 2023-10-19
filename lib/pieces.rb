@@ -41,7 +41,7 @@ class Piece
     current_piece = self
     current_spot = find_spot(current_piece, board)
     # handle diagonal movement of pawn during en-passant
-    if current_piece.is_a?(Pawn) && current_piece.en_passant_possible?(row, column, board)
+    if current_piece.instance_of?(Pawn) && current_piece.en_passant_possible?(row, column, board)
       return current_piece.en_passant(row, column, board)
     end
 
