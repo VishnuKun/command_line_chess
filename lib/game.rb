@@ -102,7 +102,9 @@ class Game
       end
       # when player resigns
       if target == 'resign'
+        opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} has resigned."
+        puts "#{opponent.name} wins!"
         break
       end
 
@@ -132,7 +134,9 @@ class Game
       location = get_valid_destination_square(piece, @current_player, moves)
       # when player resigns
       if location == 'resign'
+        opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} has resigned."
+        puts "#{opponent.name} wins!"
         break
       end
       # condition for saving the game state
