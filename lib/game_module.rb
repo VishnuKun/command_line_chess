@@ -68,6 +68,8 @@ module GameModule
       • To move a piece on your turn, you just have to type the location of the piece you wish to move and the location where you want the piece to move to.
       • Example : if you want to move a pawn which is at 'A7' to 'A6' , just type these locations one by one. First for selecting the piece, second for moving the piece. And you are good to go.
       • To save the game at any point just type 'save'. It will save the game for later use.
+      • If you want to resign as the current player, just type 'resign'. Doing so will result in your lose though.
+      • One player can propose for mutual agreement by typing 'agree' if the opponent responds in 'yes' the game will end in a draw, else game continues.
       ---------------------------------------
       Lets start the game now!
     INTRO
