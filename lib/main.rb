@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 # lib/main.rb
 require_relative 'game'
-require_relative 'pieces'
 
+# create new game object
 game = Game.new
-game.current_player = game.player1
-p game.check_mate?
-
-
+# to start playing game
+# run `ruby lib/game.rb`
+game.play_game
