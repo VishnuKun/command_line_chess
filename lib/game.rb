@@ -100,6 +100,11 @@ class Game
         save_board('game_state.sav')
         break
       end
+      # when player resigns
+      if target == 'resign'
+        puts "#{current_player.name} has resigned."
+        break
+      end
 
       row = target[0]
       column = target[1]
@@ -125,6 +130,11 @@ class Game
       end
       # ask current player to select their choice of square to move piece into
       location = get_valid_destination_square(piece, @current_player, moves)
+      # when player resigns
+      if location == 'resign'
+        puts "#{current_player.name} has resigned."
+        break
+      end
       # condition for saving the game state
       if location == 'save'
         save_board('game_state.sav')
@@ -169,8 +179,8 @@ class Game
   def get_valid_target_square(current_player)
     print "#{current_player.name} enter piece's location => "
     target = gets.chomp.strip
-    # return save if user types so
     return target if target == 'save'
+    return target if target == 'resign'
 
     loop do
       break if valid_user_input?(target)
@@ -187,8 +197,8 @@ class Game
   def get_valid_destination_square(piece, current_player, possible_moves)
     print "#{current_player.name} move '#{piece.symbol} ' to =>  "
     destination = gets.chomp.strip
-    # return save if user types so
     return destination if destination == 'save'
+    return destination if destination == 'resign'
 
     # check if response is empty
     loop do
@@ -368,34 +378,38 @@ class Game
 
   # checks if current player's king isn't in check and has no legal moves
   def stale_mate?
-    # current_player_color = current_player.controls_pieces
+    current_player_color = @current_player.controls_pieces
     board = @game_board
-    # king = nil
-    # row = nil # king row
-    # column = nil # king column
-    white_king = nil
-    black_king = nil
-    # find current player's king as per color
-    board.each_with_index do |row, _row_index|
-      row.each_with_index do |spot, _column_index|
-        white_king = spot if spot.piece.is_a?(King) && spot.piece.color == 'white'
-        black_king = spot if spot.piece.is_a?(King) && spot.piece.color == 'black'
-        # row = row_index
-        # column = column_index
+
+    # Find the current player's king
+    king = nil
+    king_row = nil
+    king_column = nil
+
+    board.each_with_index do |row, row_index|
+      row.each_with_index do |spot, column_index|
+        next unless spot.piece.is_a?(King) && spot.piece.color == current_player_color
+
+        king = spot.piece
+        king_row = row_index
+        king_column = column_index
+        break
       end
     end
-    kings = [black_king, white_king]
-    kings.each do |king_spot|
-      king = king_spot.piece
-      # ! Current player's king must not be in check
-      return false if in_check?(king, board, king_spot.row, king_spot.column) && king.valid_moves(board) == []
-      # ! Current player's king must have 0 valid moves
-      return false unless king.valid_moves(board) == []
+    # If the king is in check, it's not a stalemate
+    return false if in_check?(king, board, king_row, king_column)
 
-      return true
+    # Iterate through all the player's pieces and check for legal moves
+    player_pieces = board.flatten.select { |spot| spot.piece && spot.piece.color == current_player_color }
+
+    player_pieces.each do |spot|
+      piece = spot.piece
+      moves = piece.valid_moves(board)
+      return false unless moves.empty?
     end
 
-    false
+    # If no player pieces have legal moves, it's a stalemate
+    true
   end
 
   # checks there's no capture or no pawn movement for 50  consecutive moves
