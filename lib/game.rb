@@ -15,6 +15,8 @@ class Game
   include PieceModule
   attr_accessor :game_board, :current_player, :player1, :player2, :fifty_move_rule_counter
 
+  @@previous_board_states = []
+
   # Initializes board state
   def initialize
     chessboard = Chessboard.new
@@ -466,15 +468,31 @@ class Game
   # checks if the current position has been repeated three times
   def repetition?
     current_board_state = game_board_to_string
-    # store previous board states
-    previous_board_states = []
-    # convert current board state to string representation
-    # check if the current positions has occured two times before
-    return true if previous_board_states.count(current_board_state) >= 2
 
-    # else add current state to previous board states
-    previous_board_states << current_board_state
+    # Check if the current position has occurred two times before
+    return true if @@previous_board_states.count(current_board_state) >= 2
+
+    # Else, add the current state to previous board states
+    @@previous_board_states << current_board_state
     false
+  end
+
+  # ...
+
+  # Implement the game_board_to_string method
+  def game_board_to_string
+    @game_board.map do |row|
+      row.map do |spot|
+        spot.piece.nil? ? ' ' : spot.piece.symbol.to_s
+      end.join('')
+    end.join('/')
+  end
+
+  # ...
+
+  # Add a method to reset the previous_board_states
+  def self.reset_previous_board_states
+    @@previous_board_states = []
   end
 
   # Convert the game board to a string representation
