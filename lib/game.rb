@@ -107,6 +107,22 @@ class Game
         puts "#{opponent.name} wins!"
         break
       end
+      # when both agree to draw
+      if target == 'agree'
+        opponent = current_player == player1 ? player2 : player1
+        puts "#{current_player.name} proposes a draw."
+        print "#{opponent.name}, do you agree to the draw? Type 'yes' or 'no': "
+        response = gets.chomp.downcase
+        if response == 'yes'
+          puts 'The game ends in a draw by mutual agreement.'
+          break
+        elsif response == 'no'
+          puts "#{opponent.name} does not agree to the draw. The game continues."
+          next
+        else
+          puts "Invalid response. Please type 'yes' or 'no'."
+        end
+      end
 
       row = target[0]
       column = target[1]
@@ -138,6 +154,22 @@ class Game
         puts "#{current_player.name} has resigned."
         puts "#{opponent.name} wins!"
         break
+      end
+      # when both agree to draw
+      if location == 'agree'
+        opponent = current_player == player1 ? player2 : player1
+        puts "#{current_player.name} proposes a draw."
+        print "#{opponent.name}, do you agree to the draw? Type 'yes' or 'no': "
+        response = gets.chomp.downcase
+        if response == 'yes'
+          puts 'The game ends in a draw by mutual agreement.'
+          break
+        elsif response == 'no'
+          puts "#{opponent.name} does not agree to the draw. The game continues."
+          next
+        else
+          puts "Invalid response. Please type 'yes' or 'no'."
+        end
       end
       # condition for saving the game state
       if location == 'save'
@@ -183,8 +215,9 @@ class Game
   def get_valid_target_square(current_player)
     print "#{current_player.name} enter piece's location => "
     target = gets.chomp.strip
-    return target if target == 'save'
-    return target if target == 'resign'
+    return target if target.downcase == 'save'
+    return target if target.downcase == 'resign'
+    return target if target.downcase == 'agree'
 
     loop do
       break if valid_user_input?(target)
@@ -201,8 +234,9 @@ class Game
   def get_valid_destination_square(piece, current_player, possible_moves)
     print "#{current_player.name} move '#{piece.symbol} ' to =>  "
     destination = gets.chomp.strip
-    return destination if destination == 'save'
-    return destination if destination == 'resign'
+    return destination if destination.downcase == 'save'
+    return destination if destination.downcase == 'resign'
+    return destination if destination.downcase == 'agree'
 
     # check if response is empty
     loop do
