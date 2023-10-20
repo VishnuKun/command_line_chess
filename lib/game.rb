@@ -60,6 +60,21 @@ class Game
       puts 'No game state file found. Starting a new game...'
     end
     start_game
+
+    # add condition asking user if they want to go another round
+    loop do
+      puts 'Would you like to play again?'
+      print "Type 'yes' or 'no' to continue : "
+      response = gets.chomp
+      if response.downcase == 'yes'
+        initialize
+        start_game
+      elsif response.downcase == 'no'
+        break
+      else
+        puts "Invalid response! Please enter 'yes' or 'no' only!"
+      end
+    end
   end
 
   # Starts a new game
