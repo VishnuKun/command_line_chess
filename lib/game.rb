@@ -179,6 +179,11 @@ class Game
 
       loc_row = location[0]
       loc_column = location[1]
+
+      # add 1 to fifty_move_rule_counter if -
+      # its not a pawn
+      # and not a capture move
+      @fifty_move_rule_counter += 1 if !piece.is_a?(Pawn) && @game_board[loc_row][loc_column].empty?
       # move the piece into the destination square
       piece.move_to(loc_row, loc_column, @game_board)
       # if its a pawn and it has reached top
