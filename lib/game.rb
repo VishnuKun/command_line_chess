@@ -17,7 +17,6 @@ class Game
 
   @@previous_board_states = []
 
-  # Initializes board state
   def initialize
     chessboard = Chessboard.new
     @game_board = chessboard.board_array
@@ -30,7 +29,6 @@ class Game
 
   # starts the game
   def play_game
-    # if state file exists then ask user would they like to continue the last game where they left?
     if File.exist?('game_state.sav')
       puts 'A game state file exists! Would you like to continue the game from where you left it? '
       puts 'Or start a new game?'
@@ -41,11 +39,9 @@ class Game
           load_board('game_state.sav')
           loaded_data = Marshal.load(File.read('game_state.sav'))
 
-          # Set player names from the loaded data
           @player1.name = loaded_data[:player1_name]
           @player2.name = loaded_data[:player2_name]
 
-          # Set the game board
           @game_board = loaded_data[:game_board]
           break
         elsif response == 'n'
@@ -63,7 +59,6 @@ class Game
     end
     start_game
 
-    # add condition asking user if they want to go another round
     loop do
       puts 'Would you like to play again?'
       print "Type 'yes' or 'no' to continue : "
@@ -83,33 +78,27 @@ class Game
   def start_game
     introduction
     puts
-    # If player names are not loaded from the saved game, ask for player names
     ask_player_names if @player1.name.nil? || @player2.name.nil?
     print_board(@game_board)
 
     @current_player = @player1
     loop do
-      # check for game over condition
       if (game_over_result = game_over?)
         display_game_result(game_over_result[:result])
         puts "Reason: #{game_over_result[:reason]}"
         break
       end
-      # ask current player to select their choice of piece
       target = get_valid_target_square(@current_player)
-      # condition for saving the game state
       if target == 'save'
         save_board('game_state.sav')
         break
       end
-      # when player resigns
       if target == 'resign'
         opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} has resigned."
         puts "#{opponent.name} wins!"
         break
       end
-      # when both agree to draw
       if target == 'agree'
         opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} proposes a draw."
@@ -129,18 +118,14 @@ class Game
       row = target[0]
       column = target[1]
       piece = @game_board[row][column].piece
-      # check if a piece exists in the given location
       if piece.nil?
         puts "You can't choose empty square!"
         next
       end
-      # check if the piece selected belongs to the current player only
-      # current player shouldn't be able to choose enemy piece
       if piece.color != @current_player.controls_pieces
         puts "You can't choose enemy piece!"
         next
       end
-      # check is locked or not
       moves = piece.valid_moves(@game_board)
       if moves.empty?
         puts "#{piece.symbol} is locked or has no possible moves" unless piece.nil?
@@ -148,16 +133,13 @@ class Game
         puts 'Please select another square instead of previous one.'
         next
       end
-      # ask current player to select their choice of square to move piece into
       location = get_valid_destination_square(piece, @current_player, moves)
-      # when player resigns
       if location == 'resign'
         opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} has resigned."
         puts "#{opponent.name} wins!"
         break
       end
-      # when both agree to draw
       if location == 'agree'
         opponent = current_player == player1 ? player2 : player1
         puts "#{current_player.name} proposes a draw."
@@ -173,7 +155,6 @@ class Game
           puts "Invalid response. Please type 'yes' or 'no'."
         end
       end
-      # condition for saving the game state
       if location == 'save'
         save_board('game_state.sav')
         break
@@ -182,34 +163,18 @@ class Game
       loc_row = location[0]
       loc_column = location[1]
 
-      # add 1 to fifty_move_rule_counter if -
-      # its not a pawn
-      # and not a capture move
       @fifty_move_rule_counter += 1 if !piece.is_a?(Pawn) && @game_board[loc_row][loc_column].empty?
-      # move the piece into the destination square
       piece.move_to(loc_row, loc_column, @game_board)
-      # if its a pawn and it has reached top
-      # turn promotion variable to true
       if piece.is_a?(Pawn)
         piece.can_be_promoted = true if piece.color == 'white' && loc_row == 7
         piece.can_be_promoted = true if piece.color == 'black' && loc_row.zero?
       end
-      # handle promotion case
       if piece.is_a?(Pawn) && piece.can_be_promoted
-        # ask for key for promotion
         key = piece.get_promotion_instance_id
-        # perform promotion
         piece.promote_to(key, @game_board)
       end
-      # print the board right after to show movement
       print_board(@game_board)
 
-      # if game_over_result = game_over?
-      #   display_game_result(game_over_result[:result])
-      #   puts "Reason: #{game_over_result[:reason]}"
-      #   break
-      # end
-      # update current player accordingly
       @current_player = if @current_player == @player1
                           @player2
                         else
@@ -233,7 +198,6 @@ class Game
       print "#{current_player.name} enter piece's location => "
       target = gets.chomp.strip
     end
-    # return location in [row, column] format
     convert_alphanumeric_to_indices(target)
   end
 
@@ -245,7 +209,6 @@ class Game
     return destination if destination.downcase == 'resign'
     return destination if destination.downcase == 'agree'
 
-    # check if response is empty
     loop do
       break if destination != ''
 
@@ -270,7 +233,6 @@ class Game
     string = value.chars
     row = string[1].to_i - 1
     column = string[0].downcase
-    # update the column as per alphabet
     case column
     when 'a'
       column = 0
@@ -327,39 +289,32 @@ class Game
   # creates boards initial state for gameplay
   def create_initial_board_state
     board = @game_board
-    # for placing pawns
-    row_two = board[1] # for white pawns
-    row_three = board[6] # for black pawns
+    row_two = board[1] 
+    row_three = board[6] 
 
-    # setting pawns
-    row_two.each { |spot| spot.piece = Piece.create_piece(-1) } # white pawns
-    row_three.each { |spot| spot.piece = Piece.create_piece(1) } # black pawns
+    row_two.each { |spot| spot.piece = Piece.create_piece(-1) } 
+    row_three.each { |spot| spot.piece = Piece.create_piece(1) } 
 
-    # setting rooks
-    board[0][0].piece = Piece.create_piece(-4) # white rook left
-    board[0][7].piece = Piece.create_piece(-4) # white rook right
-    board[7][0].piece = Piece.create_piece(4) # black rook left
-    board[7][7].piece = Piece.create_piece(4) # black rook right
+    board[0][0].piece = Piece.create_piece(-4) 
+    board[0][7].piece = Piece.create_piece(-4) 
+    board[7][0].piece = Piece.create_piece(4) 
+    board[7][7].piece = Piece.create_piece(4) 
 
-    # setting knights
-    board[0][1].piece = Piece.create_piece(-2) # white knight left
-    board[0][6].piece = Piece.create_piece(-2) # white knight right
-    board[7][1].piece = Piece.create_piece(2) # black knight left
-    board[7][6].piece = Piece.create_piece(2) # black knight right
+    board[0][1].piece = Piece.create_piece(-2) 
+    board[0][6].piece = Piece.create_piece(-2) 
+    board[7][1].piece = Piece.create_piece(2) 
+    board[7][6].piece = Piece.create_piece(2) 
 
-    # setting bishops
-    board[0][2].piece = Piece.create_piece(-3) # white bishop left
-    board[0][5].piece = Piece.create_piece(-3) # white bishop right
-    board[7][2].piece = Piece.create_piece(3) # black bishop left
-    board[7][5].piece = Piece.create_piece(3) # black bishop right
+    board[0][2].piece = Piece.create_piece(-3) 
+    board[0][5].piece = Piece.create_piece(-3) 
+    board[7][2].piece = Piece.create_piece(3) 
+    board[7][5].piece = Piece.create_piece(3) 
 
-    # setting queens
-    board[0][3].piece = Piece.create_piece(-6) # white queen left
-    board[7][3].piece = Piece.create_piece(5) # black queen left
+    board[0][3].piece = Piece.create_piece(-6) 
+    board[7][3].piece = Piece.create_piece(5) 
 
-    # setting kings
-    board[0][4].piece = Piece.create_piece(-5) # white king right
-    board[7][4].piece = Piece.create_piece(6) # black king right
+    board[0][4].piece = Piece.create_piece(-5) 
+    board[7][4].piece = Piece.create_piece(6) 
   end
 
   # Update the game_over? method in your Game class
@@ -377,10 +332,8 @@ class Game
   def display_game_result(result)
     case result
     when :checkmate
-      # when current player checkmates i.e. wins
       loser = current_player
       winner = current_player == player1 ? player2 : player1
-      # when current player gets check mated i.e. losts
 
       puts "#{winner.name} checkmated #{loser.name}!"
       puts "#{winner.name} wins!"
@@ -400,9 +353,8 @@ class Game
     current_player_color = @current_player.controls_pieces
     board = @game_board
     king = nil
-    king_row = nil # king row
-    king_column = nil # king column
-    # find current player's king as per color
+    king_row = nil 
+    king_column = nil 
     board.each_with_index do |row, row_index|
       row.each_with_index do |spot, column_index|
         next unless spot.piece.is_a?(King) && spot.piece.color == current_player_color
@@ -413,9 +365,7 @@ class Game
         break
       end
     end
-    # ! Current player's king must be in check
     return false unless in_check?(king, board, king_row, king_column)
-    # ! Current player's king must have 0 valid moves
     return false unless king.valid_moves(board) == []
 
     true
@@ -426,7 +376,6 @@ class Game
     current_player_color = @current_player.controls_pieces
     board = @game_board
 
-    # Find the current player's king
     king = nil
     king_row = nil
     king_column = nil
@@ -441,10 +390,8 @@ class Game
         break
       end
     end
-    # If the king is in check, it's not a stalemate
     return false if in_check?(king, board, king_row, king_column)
 
-    # Iterate through all the player's pieces and check for legal moves
     player_pieces = board.flatten.select { |spot| spot.piece && spot.piece.color == current_player_color }
 
     player_pieces.each do |spot|
@@ -453,7 +400,6 @@ class Game
       return false unless moves.empty?
     end
 
-    # If no player pieces have legal moves, it's a stalemate
     true
   end
 
@@ -469,10 +415,8 @@ class Game
   def repetition?
     current_board_state = game_board_to_string
 
-    # Check if the current position has occurred two times before
     return true if @@previous_board_states.count(current_board_state) >= 2
 
-    # Else, add the current state to previous board states
     @@previous_board_states << current_board_state
     false
   end
@@ -487,8 +431,6 @@ class Game
       end.join('')
     end.join('/')
   end
-
-  # ...
 
   # Add a method to reset the previous_board_states
   def self.reset_previous_board_states
@@ -536,11 +478,9 @@ class Game
 
   # checks if the current player has won
   def win?
-    # find enemy player's king and check if its captured or not
     current_player_color = current_player.controls_pieces
     board = @game_board
     enemy_king = nil
-    # find current player's king as per color
     board.each do |row|
       row.each do |spot|
         enemy_king = spot.piece if spot.piece.is_a?(King) && spot.piece.color != current_player_color
@@ -553,11 +493,9 @@ class Game
 
   # checks if the current player has lost
   def lose?
-    # find current player's king and check if its captured or not
     current_player_color = current_player.controls_pieces
     board = @game_board
     current_player_king = nil
-    # find current player's king as per color
     board.each do |row|
       row.each do |spot|
         current_player_king = spot.piece if spot.piece.is_a?(King) && spot.piece.color != current_player_color
