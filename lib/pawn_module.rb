@@ -7,22 +7,14 @@ module PawnModule
   # performs en-passant action
   def en_passant(row, column, board)
     piece = self
-    # find piece's spot
     piece_spot = find_spot(piece, board)
-    # find enemy piece and its spot
-    # ! give row from piece and column from destination
     en_passant_spot = board[piece_spot.row][column]
-    # get enemy piece
     killed_pawn = en_passant_spot.piece
-    # check if en passant is possible or not
     return unless en_passant_possible?(row, column, board)
 
-    # capture target pawn
     killed_pawn.captured = true
     en_passant_spot.piece = nil
-    # remove your piece from its original spot
     piece_spot.piece = nil
-    # place your piece on the diagonal spot
     destination = board[row][column]
     destination.piece = piece
   end
@@ -34,7 +26,6 @@ module PawnModule
     en_passant_spot = board[piece_spot.row][column]
     killed_pawn = en_passant_spot.piece
 
-    # Check if the killed_pawn is a Pawn and it has moved two spots
     return false unless killed_pawn.is_a?(Pawn) && killed_pawn.moved_two_spots
     return false unless killed_pawn.is_a?(Pawn) && killed_pawn.color != piece.color
 
@@ -58,7 +49,6 @@ module PawnModule
     puts 'Promotion Keys :- Knight => 1, Bishop => 2, Rook => 3, Queen => 4'
     print 'Please enter promotion key : '
     response = gets.chomp
-    # check if the response is valid or not
     loop do
       break if response.to_i.between?(1, 4)
 
@@ -66,15 +56,14 @@ module PawnModule
       print 'Please enter promotion key : '
       response = gets.chomp
     end
-    # convert the response into proper id according to color
     case response.to_i
-    when 1 # Knight
+    when 1
       instance_id = pawn.color == 'white' ? -2 : 2
-    when 2 # Bishop
+    when 2
       instance_id = pawn.color == 'white' ? -3 : 3
-    when 3 # Rook
+    when 3
       instance_id = pawn.color == 'white' ? -4 : 4
-    when 4 # Queen
+    when 4
       instance_id = pawn.color == 'white' ? -6 : 5
     end
     instance_id
@@ -120,9 +109,8 @@ module PawnModule
                                                                                         right_diagonal.column, board)
     end
 
-    # Check if the pawn has reached the farthest point and ready for promotion
-    pawn.can_be_promoted = true if x == 7 # white pawn promotion
-    pawn.can_be_promoted = true if x.zero? # black pawn promotion
+    pawn.can_be_promoted = true if x == 7
+    pawn.can_be_promoted = true if x.zero?
     moves
   end
 end

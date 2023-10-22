@@ -27,7 +27,6 @@ module GameModule
 
   # Deletes the state files if the game finishes or the game is over
   def delete_state_files(filename)
-    # Delete the state files
     File.delete(filename) if File.exist?(filename)
   end
 

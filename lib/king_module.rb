@@ -88,7 +88,6 @@ module KingModule
 
   # check if the piece can attack the piece at the given position
   def can_attack?(spot, enemy, _board, row, column)
-    # for enemy king
     return true if enemy.is_a?(King) && enemy_king_moves(spot, _board).include?([row, column])
 
     case enemy
