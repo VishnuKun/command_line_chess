@@ -47,24 +47,17 @@ class Piece
 
     # handle castling
     if current_piece.is_a?(King) && (column - current_spot.column).abs == 2
-      # perform castling
-      # if given row is smaller - left castling
       return castle_left(board) if column < current_spot.column
-      # if given row is greater - right castling
       return castle_right(board) if column > current_spot.column
     end
 
     current_spot.piece = nil
     current_piece.moved = true
-    # find the destination spot
     destination = board[row][column]
-    # check if the desination isn't inhabited by friendly piece
     return unless destination.empty? || current_piece.color != destination
 
-    # capture enemy piece if present
     destination.piece.captured = true if destination.piece && current_piece.color != destination.piece.color
 
-    # make the destination_spot.piece = piece
     destination.piece = current_piece
     # handle double step case
     return unless current_piece.is_a?(Pawn) && (destination.row - current_spot.row).abs == 2
@@ -72,22 +65,16 @@ class Piece
     current_piece.moved_two_spots = true
   end
 
-  # captures the enemy piece at the given position
   def capture_at(row, column, board)
     current_piece = self
     current_spot = find_spot(current_piece, board)
     target_spot = board[row][column]
     enemy_piece = target_spot.piece
-    # performs only when there's enemy piece on target spot
     return unless current_piece.color != enemy_piece.color
 
-    # remove the enemy piece from the spot
     target_spot.piece = nil
-    # remove the your piece from the original spot
     current_spot.piece = nil
-    # mark it(captured piece) as captured
     enemy_piece.captured = true
-    # place your piece on the spot
     target_spot.piece = current_piece
   end
 end
