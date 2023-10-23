@@ -289,32 +289,32 @@ class Game
   # creates boards initial state for gameplay
   def create_initial_board_state
     board = @game_board
-    row_two = board[1] 
-    row_three = board[6] 
+    row_two = board[1]
+    row_three = board[6]
 
-    row_two.each { |spot| spot.piece = Piece.create_piece(-1) } 
-    row_three.each { |spot| spot.piece = Piece.create_piece(1) } 
+    row_two.each { |spot| spot.piece = Piece.create_piece(-1) }
+    row_three.each { |spot| spot.piece = Piece.create_piece(1) }
 
-    board[0][0].piece = Piece.create_piece(-4) 
-    board[0][7].piece = Piece.create_piece(-4) 
-    board[7][0].piece = Piece.create_piece(4) 
-    board[7][7].piece = Piece.create_piece(4) 
+    board[0][0].piece = Piece.create_piece(-4)
+    board[0][7].piece = Piece.create_piece(-4)
+    board[7][0].piece = Piece.create_piece(4)
+    board[7][7].piece = Piece.create_piece(4)
 
-    board[0][1].piece = Piece.create_piece(-2) 
-    board[0][6].piece = Piece.create_piece(-2) 
-    board[7][1].piece = Piece.create_piece(2) 
-    board[7][6].piece = Piece.create_piece(2) 
+    board[0][1].piece = Piece.create_piece(-2)
+    board[0][6].piece = Piece.create_piece(-2)
+    board[7][1].piece = Piece.create_piece(2)
+    board[7][6].piece = Piece.create_piece(2)
 
-    board[0][2].piece = Piece.create_piece(-3) 
-    board[0][5].piece = Piece.create_piece(-3) 
-    board[7][2].piece = Piece.create_piece(3) 
-    board[7][5].piece = Piece.create_piece(3) 
+    board[0][2].piece = Piece.create_piece(-3)
+    board[0][5].piece = Piece.create_piece(-3)
+    board[7][2].piece = Piece.create_piece(3)
+    board[7][5].piece = Piece.create_piece(3)
 
-    board[0][3].piece = Piece.create_piece(-6) 
-    board[7][3].piece = Piece.create_piece(5) 
+    board[0][3].piece = Piece.create_piece(-6)
+    board[7][3].piece = Piece.create_piece(5)
 
-    board[0][4].piece = Piece.create_piece(-5) 
-    board[7][4].piece = Piece.create_piece(6) 
+    board[0][4].piece = Piece.create_piece(-5)
+    board[7][4].piece = Piece.create_piece(6)
   end
 
   # Update the game_over? method in your Game class
@@ -353,8 +353,8 @@ class Game
     current_player_color = @current_player.controls_pieces
     board = @game_board
     king = nil
-    king_row = nil 
-    king_column = nil 
+    king_row = nil
+    king_column = nil
     board.each_with_index do |row, row_index|
       row.each_with_index do |spot, column_index|
         next unless spot.piece.is_a?(King) && spot.piece.color == current_player_color
