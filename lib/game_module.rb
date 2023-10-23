@@ -4,7 +4,7 @@
 
 # contains general methods for game class
 module GameModule
-  # method for saving game state
+  # saves current game state
   def save_board(filename)
     data = {
       player1_name: @player1.name,
