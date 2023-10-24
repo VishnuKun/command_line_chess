@@ -114,7 +114,6 @@ describe King do
         chess_board.add_piece(left_rook, 7, 0)
         chess_board.add_piece(right_rook, 7, 7)
         chess_board.add_piece(knight, 7, 1)
-
       end
       it "doesn't change the positions of the rook and king" do
         white_king.castle_left(chess_board.board_array)
@@ -127,20 +126,20 @@ describe King do
     end
   end
 
-  describe '#castle_right' do 
-    context 'when king is in check' do 
+  describe '#castle_right' do
+    context 'when king is in check' do
       subject(:king) { King.new(-5) }
       let(:rook) { Rook.new(-4) }
       let(:chess_board) { Chessboard.new }
       let(:enemy_queen) { Queen.new(5) }
 
-      before do 
+      before do
         chess_board.add_piece(king, 7, 4)
         chess_board.add_piece(rook, 7, 7)
         chess_board.add_piece(enemy_queen, 4, 7)
       end
 
-      it "doesn't perform castling" do 
+      it "doesn't perform castling" do
         king.castle_right(chess_board.board_array)
 
         expect(chess_board.piece_at(7, 4)).to eq(king)
@@ -148,19 +147,19 @@ describe King do
       end
     end
 
-    context 'when king will be in check after performing castling' do 
+    context 'when king will be in check after performing castling' do
       subject(:king) { King.new(-5) }
       let(:rook) { Rook.new(-4) }
       let(:chess_board) { Chessboard.new }
       let(:enemy_queen) { Queen.new(5) }
 
-      before do 
+      before do
         chess_board.add_piece(king, 7, 4)
         chess_board.add_piece(rook, 7, 7)
         chess_board.add_piece(enemy_queen, 0, 6)
       end
 
-      it "doesn't perform castling" do 
+      it "doesn't perform castling" do
         king.castle_right(chess_board.board_array)
 
         expect(chess_board.piece_at(7, 4)).to eq(king)

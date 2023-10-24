@@ -34,7 +34,7 @@ describe Game do
         expect(game.game_over?).to eq(true)
       end
     end
-    
+
     context 'when you checkmates your enemies king' do
       before do
         allow(game).to receive(:win?).and_return(true)

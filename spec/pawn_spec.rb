@@ -139,7 +139,6 @@ describe Pawn do
         expect(chess_board.piece_at(4, 1)).to be_nil
       end
     end
-    
 
     context 'when white pawn does a double step' do
       subject(:black_pawn) { described_class.create_piece(-1) }
