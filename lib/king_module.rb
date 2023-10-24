@@ -8,14 +8,14 @@ module KingModule
     moves = []
 
     directions = [
-      [-1, -1], 
-      [-1, 1], 
-      [1, -1], 
-      [1, 1], 
-      [-1, 0], 
-      [1, 0], 
-      [0, -1], 
-      [0, 1] 
+      [-1, -1],
+      [-1, 1],
+      [1, -1],
+      [1, 1],
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1]
     ]
 
     # Check all directions for valid moves
@@ -32,8 +32,8 @@ module KingModule
       moves << [row, column] unless in_check?(self, temp_board, row, column)
     end
 
-    moves << [spot.row, spot.column - 2] if can_castle_to_left?(spot, board) 
-    moves << [spot.row, spot.column + 2] if can_castle_to_right?(spot, board) 
+    moves << [spot.row, spot.column - 2] if can_castle_to_left?(spot, board)
+    moves << [spot.row, spot.column + 2] if can_castle_to_right?(spot, board)
 
     moves
   end
@@ -42,14 +42,14 @@ module KingModule
   def enemy_king_moves(spot, _board)
     moves = []
     directions = [
-      [-1, -1], 
-      [-1, 1], 
-      [1, -1], 
-      [1, 1], 
-      [-1, 0], 
-      [1, 0], 
-      [0, -1], 
-      [0, 1] 
+      [-1, -1],
+      [-1, 1],
+      [1, -1],
+      [1, 1],
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1]
     ]
     # Check all directions for valid moves
     directions.each do |direction|
