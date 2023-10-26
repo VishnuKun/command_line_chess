@@ -19,9 +19,9 @@ Simple command line chess game where two players can play against each other.
 
 ## Usage
 
-1. Run the 'main.rb' from the 'lib' directory using : `ruby lib/main.rb`
+1. Run the `main.rb` from the `lib` directory using : `ruby lib/main.rb`
 
-2. The game will prompt player 1 to make the first move with white troops. Each player on their turn will enter their choices in this format only 'piece_square' afterwards 'destination_square'. For example, to move the piece on the square 'a1' to destinaton 'a8' the user will be prompted to enter the 'piece_square', here 'a1', first then 'destination_square', here 'a8'.
+2. The game will prompt player 1 to make the first move with white troops. Each player on their turn will enter their choices in this format only `piece_square` afterwards `destination_square`. For example, to move the piece on the square `a1` to destinaton `a8` the user will be prompted to enter the `piece_square`, here `a1`, first then `destination_square`, here `a8`.
 
 3. The game will continue asking each player for the squares and updating the board accordingly, until the game is over.
 
